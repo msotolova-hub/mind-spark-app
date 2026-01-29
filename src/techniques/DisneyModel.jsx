@@ -77,9 +77,9 @@ const DisneyModel = ({ onBack }) => {
       questions: [
         { id: 'vize_cas', label: 'POHLED DO BUDOUCNOSTI (5 LET)', placeholder: 'Co vidíte v pět let vzdálené budoucnosti?', type: 'text' },
         { id: 'vize_popis', label: 'PANORAMA MOŽNOSTÍ', placeholder: 'Pohlédněte na svítání velkého snu... Co konkrétně vidíte?', type: 'textarea' },
-        { id: 'vize_film', label: 'VNITŘNÍ „ČTYŘHVĚZDIČKOVÝ" FILM', placeholder: 'Sledujte sám/sama sebe v akci. Co vidíte v živých barvách?', type: 'textarea' },
+        { id: 'vize_film', label: 'VNITŘNÍ FILM', placeholder: 'Sledujte sám/sama sebe v akci. Co vidíte v živých barvách?', type: 'textarea' },
         { id: 'vize_pocity', label: 'HODNOTY A POCITY', placeholder: 'Jakou největší hodnotu tento sen přináší?', type: 'text' },
-        { id: 'vize_telo', label: 'TĚLESNÁ KOTVA', placeholder: 'Kde v těle vnímáte tento „rozvíjející se sen"?', type: 'text' }
+        { id: 'vize_telo', label: 'TĚLESNÁ KOTVA', placeholder: 'Kde v těle vnímáte tento rozvíjející se sen?', type: 'text' }
       ],
       guide: {
         state: "DISOCIOVANÝ (vizionář)",
@@ -100,7 +100,7 @@ const DisneyModel = ({ onBack }) => {
       ],
       guide: {
         state: "ASOCIOVANÝ (v akci)",
-        body: "Zaměření kupředu, aktivní postoj „pojďme na to".",
+        body: "Zaměření kupředu, aktivní postoj - pojďme na to.",
         voice: "Věcný, procedurální tón.",
         phrases: ["Nasaďte si (zvolenou) kotvu a zamyslete se nad kroky.", "Představte si činnosti, jako byste je právě vykonával/a.", "Stojí to za to? Jsou energie a hodnota v rovnováze?"]
       }
@@ -111,7 +111,7 @@ const DisneyModel = ({ onBack }) => {
       icon: <Search className="w-5 h-5" />,
       color: 'bg-[#EF4444]',
       questions: [
-        { id: 'kritik_predpoklad', label: '„PŘEDPOKLÁDEJME, ŽE..."', placeholder: 'Jaké otázky by si kladl kritik?', type: 'textarea' },
+        { id: 'kritik_predpoklad', label: 'PŘEDPOKLÁDEJME, ŽE...', placeholder: 'Jaké otázky by si kladl kritik?', type: 'textarea' },
         { id: 'kritik_uhel_pohledu', label: 'POZICE JINÉHO ÚHLU POHLEDU', placeholder: 'Co by řekl bankéř nebo konkurence?', type: 'textarea' },
         { id: 'kritik_napady', label: 'CITLIVOST VŮČI OSTATNÍM', placeholder: 'Jak spojit zájmy ostatních se svými?', type: 'textarea' },
         { id: 'zaver_plan', label: 'PRVNÍ KONKRÉTNÍ KROK', placeholder: 'Co konkrétně a hmatatelně uděláte jako první krok po tomto sezení?', type: 'textarea' }
