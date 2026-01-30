@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
   ChevronRight, X, Info, ArrowLeft
@@ -366,9 +367,14 @@ const Dashboard = ({ onSelectTechnique, onShowInfo }) => {
             </div>
           </div>
           
-          <button className="p-2 rounded-xl hover:bg-[#FAF6F2] text-[#a69d90] hover:text-[#ff8474] transition-colors">
-            <LogOut size={20} />
-          </button>
+          <UserButton 
+              afterSignOutUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: "w-10 h-10"
+                }
+              }}
+            />
         </div>
       </header>
       
@@ -460,25 +466,49 @@ const App = () => {
     <>
       <GlobalStyles />
       
-      {currentView === 'dashboard' && (
-        <Dashboard 
-          onSelectTechnique={handleSelectTechnique}
-          onShowInfo={(t) => setInfoTechnique(t)}
-        />
-      )}
-      
-      {currentView === 'technique' && renderTechnique()}
-      
-      {infoTechnique && (
-        <MethodInfoModal 
-          technique={infoTechnique} 
-          onClose={() => setInfoTechnique(null)}
-          onStart={() => { 
-            handleSelectTechnique(infoTechnique); 
-            setInfoTechnique(null); 
-          }}
-        />
-      )}
+      {/* Přihlašovací obrazovka pro nepřihlášené */}
+      <SignedOut>
+        <div className="min-h-screen bg-[#FAF6F2] flex flex-col items-center justify-center p-6">
+          <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
+              <Sparkles size={32} className="text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-[#2C2C2C] mb-2">Mind Spark</h1>
+            <p className="text-[#a69d90] mb-8">Profesionální koučovací nástroje</p>
+            <SignInButton mode="modal">
+              <button className="w-full bg-[#ff8474] text-white font-bold py-4 px-8 rounded-xl hover:bg-[#e06b5c] transition-colors text-lg">
+                Přihlásit se
+              </button>
+            </SignInButton>
+            <p className="mt-6 text-sm text-[#a69d90]">
+              Nemáte účet? Registrace je součástí přihlášení.
+            </p>
+          </div>
+        </div>
+      </SignedOut>
+
+      {/* Aplikace pro přihlášené */}
+      <SignedIn>
+        {currentView === 'dashboard' && (
+          <Dashboard 
+            onSelectTechnique={handleSelectTechnique}
+            onShowInfo={(t) => setInfoTechnique(t)}
+          />
+        )}
+        
+        {currentView === 'technique' && renderTechnique()}
+        
+        {infoTechnique && (
+          <MethodInfoModal 
+            technique={infoTechnique} 
+            onClose={() => setInfoTechnique(null)}
+            onStart={() => { 
+              handleSelectTechnique(infoTechnique); 
+              setInfoTechnique(null); 
+            }}
+          />
+        )}
+      </SignedIn>
     </>
   );
 };
