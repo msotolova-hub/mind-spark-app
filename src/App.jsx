@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser, useAuth } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
   ChevronRight, X, Info, ArrowLeft, Star, Check, CreditCard
@@ -360,11 +360,7 @@ const STRIPE_LINKS = {
 // ============================================
 // DASHBOARD
 // ============================================
-const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, onShowPricing }) => {
-  const { user } = useUser();
-  const subscription = user?.publicMetadata?.subscription;
-  const isActive = subscription?.status === 'active';
-  
+const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, onShowPricing, isSubscribed }) => {
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -380,7 +376,7 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
           </div>
           
           <div className="flex items-center gap-4">
-            {isActive ? (
+            {isSubscribed ? (
               <button
                 onClick={onShowPricing}
                 className="flex items-center gap-2 bg-green-100 text-green-700 font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition-colors text-sm"
@@ -451,37 +447,6 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
         </div>
       </footer>
       
-      {/* Paywall pro neplatící uživatele */}
-      {!isActive && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
-              <Sparkles size={32} className="text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-[#2C2C2C] mb-2">Aktivujte Mind Spark Pro</h2>
-            <p className="text-[#78716C] mb-6">
-              Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům.
-            </p>
-            <div className="space-y-3">
-              <a 
-                href={STRIPE_LINKS.monthly}
-                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors"
-              >
-                Měsíční - 299 Kč
-              </a>
-              <a 
-                href={STRIPE_LINKS.yearly}
-                className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors"
-              >
-                Roční - 2 490 Kč (ušetříte 17 %)
-              </a>
-            </div>
-            <p className="mt-6 text-xs text-[#a69d90]">
-              Bezpečná platba přes Stripe · Zrušení kdykoliv
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -490,11 +455,7 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
 // STRÁNKA S CENAMI
 // ============================================
 
-const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy }) => {
-  const { user } = useUser();
-  const subscription = user?.publicMetadata?.subscription;
-  const isActive = subscription?.status === 'active';
-  
+const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy, isSubscribed }) => {
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -520,7 +481,7 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
       </header>
       
       <main className="max-w-4xl mx-auto px-6 py-12">
-        {isActive && (
+        {isSubscribed && (
           <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 max-w-3xl mx-auto">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
@@ -528,9 +489,6 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </div>
               <div>
                 <h3 className="font-bold text-green-800">Máte aktivní předplatné Pro</h3>
-                <p className="text-sm text-green-600">
-                  Aktivováno: {new Date(subscription.activatedAt).toLocaleDateString('cs-CZ')}
-                </p>
               </div>
             </div>
           </div>
@@ -538,10 +496,10 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
         
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-[#2C2C2C] mb-4">
-            {isActive ? 'Váš aktuální plán' : 'Vyberte si svůj plán'}
+            {isSubscribed ? 'Váš aktuální plán' : 'Vyberte si svůj plán'}
           </h1>
           <p className="text-[#78716C] max-w-xl mx-auto">
-            {isActive 
+            {isSubscribed 
               ? 'Děkujeme za vaši podporu! Máte přístup ke všem funkcím.'
               : 'Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům'
             }
@@ -578,7 +536,7 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            {isActive ? (
+            {isSubscribed ? (
               <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
                 Aktuální plán
               </div>
@@ -628,7 +586,7 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            {isActive ? (
+            {isSubscribed ? (
               <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
                 Upgrade
               </div>
@@ -888,10 +846,32 @@ const PrivacyContent = () => (
 // PROTECTED CONTENT - kontrola předplatného
 // ============================================
 const ProtectedContent = ({ children, onShowTerms, onShowPrivacy }) => {
+  const { isLoaded, isSignedIn } = useAuth();
   const { user } = useUser();
   
-  // Jednoduchá kontrola - má aktivní předplatné?
-  if (user?.publicMetadata?.subscription?.status === 'active') {
+  // Clerk se načítá
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-[#ff8474] flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <Sparkles size={24} className="text-white" />
+          </div>
+          <p className="text-[#a69d90]">Načítání...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Není přihlášen (nemělo by nastat díky SignedIn wrapperu, ale pro jistotu)
+  if (!isSignedIn) {
+    return null;
+  }
+  
+  // Kontrola předplatného
+  const hasSubscription = user?.publicMetadata?.subscription?.status === 'active';
+  
+  if (hasSubscription) {
     return children;
   }
   
@@ -902,6 +882,7 @@ const ProtectedContent = ({ children, onShowTerms, onShowPrivacy }) => {
       showBackButton={false}
       onShowTerms={onShowTerms}
       onShowPrivacy={onShowPrivacy}
+      isSubscribed={false}
     />
   );
 };
@@ -988,33 +969,41 @@ const App = () => {
             type={legalPage} 
             onBack={() => setLegalPage(null)} 
           />
-        ) : showPricing ? (
-          <PricingPage onBack={() => setShowPricing(false)} />
         ) : (
-          <>
-            {currentView === 'dashboard' && (
-              <Dashboard 
-                onSelectTechnique={handleSelectTechnique}
-                onShowInfo={(t) => setInfoTechnique(t)}
-                onShowTerms={() => setLegalPage('terms')}
-                onShowPrivacy={() => setLegalPage('privacy')}
-                onShowPricing={() => setShowPricing(true)}
-              />
+          <ProtectedContent 
+            onShowTerms={() => setLegalPage('terms')}
+            onShowPrivacy={() => setLegalPage('privacy')}
+          >
+            {showPricing ? (
+              <PricingPage onBack={() => setShowPricing(false)} isSubscribed={true} />
+            ) : (
+              <>
+                {currentView === 'dashboard' && (
+                  <Dashboard 
+                    onSelectTechnique={handleSelectTechnique}
+                    onShowInfo={(t) => setInfoTechnique(t)}
+                    onShowTerms={() => setLegalPage('terms')}
+                    onShowPrivacy={() => setLegalPage('privacy')}
+                    onShowPricing={() => setShowPricing(true)}
+                    isSubscribed={true}
+                  />
+                )}
+                
+                {currentView === 'technique' && renderTechnique()}
+                
+                {infoTechnique && (
+                  <MethodInfoModal 
+                    technique={infoTechnique} 
+                    onClose={() => setInfoTechnique(null)}
+                    onStart={() => { 
+                      handleSelectTechnique(infoTechnique); 
+                      setInfoTechnique(null); 
+                    }}
+                  />
+                )}
+              </>
             )}
-            
-            {currentView === 'technique' && renderTechnique()}
-            
-            {infoTechnique && (
-              <MethodInfoModal 
-                technique={infoTechnique} 
-                onClose={() => setInfoTechnique(null)}
-                onStart={() => { 
-                  handleSelectTechnique(infoTechnique); 
-                  setInfoTechnique(null); 
-                }}
-              />
-            )}
-          </>
+          </ProtectedContent>
         )}
       </SignedIn>
     </>
