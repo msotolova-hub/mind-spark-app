@@ -353,6 +353,10 @@ const TechniqueCard = ({ technique, onClick, onInfoClick }) => {
 // DASHBOARD
 // ============================================
 const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, onShowPricing }) => {
+  const { user } = useUser();
+  const subscription = user?.publicMetadata?.subscription;
+  const isActive = subscription?.status === 'active';
+  
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -368,13 +372,23 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
           </div>
           
           <div className="flex items-center gap-4">
-            <button
-              onClick={onShowPricing}
-              className="flex items-center gap-2 bg-[#ff8474] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#e06b5c] transition-colors text-sm"
-            >
-              <CreditCard size={16} />
-              <span className="hidden sm:inline">Předplatné</span>
-            </button>
+            {isActive ? (
+              <button
+                onClick={onShowPricing}
+                className="flex items-center gap-2 bg-green-100 text-green-700 font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition-colors text-sm"
+              >
+                <Check size={16} />
+                <span className="hidden sm:inline">Pro aktivní</span>
+              </button>
+            ) : (
+              <button
+                onClick={onShowPricing}
+                className="flex items-center gap-2 bg-[#ff8474] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#e06b5c] transition-colors text-sm"
+              >
+                <CreditCard size={16} />
+                <span className="hidden sm:inline">Předplatné</span>
+              </button>
+            )}
             <UserButton 
               afterSignOutUrl="/"
               appearance={{
@@ -441,6 +455,10 @@ const STRIPE_LINKS = {
 };
 
 const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy }) => {
+  const { user } = useUser();
+  const subscription = user?.publicMetadata?.subscription;
+  const isActive = subscription?.status === 'active';
+  
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -466,12 +484,31 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
       </header>
       
       <main className="max-w-4xl mx-auto px-6 py-12">
+        {isActive && (
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 max-w-3xl mx-auto">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                <Check size={20} className="text-green-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-green-800">Máte aktivní předplatné Pro</h3>
+                <p className="text-sm text-green-600">
+                  Aktivováno: {new Date(subscription.activatedAt).toLocaleDateString('cs-CZ')}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-[#2C2C2C] mb-4">
-            Vyberte si svůj plán
+            {isActive ? 'Váš aktuální plán' : 'Vyberte si svůj plán'}
           </h1>
           <p className="text-[#78716C] max-w-xl mx-auto">
-            Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům
+            {isActive 
+              ? 'Děkujeme za vaši podporu! Máte přístup ke všem funkcím.'
+              : 'Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům'
+            }
           </p>
         </div>
 
@@ -505,14 +542,20 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            <a 
-              href={STRIPE_LINKS.monthly}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors text-center"
-            >
-              Vybrat měsíční
-            </a>
+            {isActive ? (
+              <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
+                Aktuální plán
+              </div>
+            ) : (
+              <a 
+                href={STRIPE_LINKS.monthly}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors text-center"
+              >
+                Vybrat měsíční
+              </a>
+            )}
           </div>
 
           {/* Roční plán */}
@@ -549,14 +592,20 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            <a 
-              href={STRIPE_LINKS.yearly}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center"
-            >
-              Vybrat roční
-            </a>
+            {isActive ? (
+              <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
+                Upgrade
+              </div>
+            ) : (
+              <a 
+                href={STRIPE_LINKS.yearly}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center"
+              >
+                Vybrat roční
+              </a>
+            )}
           </div>
         </div>
 
@@ -804,9 +853,32 @@ const PrivacyContent = () => (
 // ============================================
 const ProtectedContent = ({ children, onShowPricing, onShowTerms, onShowPrivacy }) => {
   const { user, isLoaded } = useUser();
+  const [showLoading, setShowLoading] = useState(true);
   
-  // Čekáme na načtení uživatele
-  if (!isLoaded) {
+  // Při načtení uživatele uložíme stav do localStorage
+  React.useEffect(() => {
+    if (isLoaded && user) {
+      const subscription = user.publicMetadata?.subscription;
+      if (subscription?.status === 'active') {
+        localStorage.setItem('mind-spark-subscription', 'active');
+      } else {
+        localStorage.removeItem('mind-spark-subscription');
+      }
+    }
+  }, [isLoaded, user]);
+  
+  // Skryjeme loading po načtení NEBO po 1.5 sekundách
+  React.useEffect(() => {
+    if (isLoaded) {
+      setShowLoading(false);
+    } else {
+      const timer = setTimeout(() => setShowLoading(false), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaded]);
+  
+  // Krátký loading state
+  if (showLoading && !isLoaded) {
     return (
       <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
         <div className="text-center">
@@ -823,10 +895,10 @@ const ProtectedContent = ({ children, onShowPricing, onShowTerms, onShowPrivacy 
   const subscription = user?.publicMetadata?.subscription;
   const hasActiveSubscription = subscription?.status === 'active';
   
-  // PRO TESTOVÁNÍ: odkomentuj následující řádek pro přeskočení kontroly
-  // const hasActiveSubscription = true;
+  // Fallback na localStorage cache (pro rychlejší načtení)
+  const cachedSubscription = typeof window !== 'undefined' && localStorage.getItem('mind-spark-subscription') === 'active';
   
-  if (!hasActiveSubscription) {
+  if (!hasActiveSubscription && !cachedSubscription) {
     return (
       <PricingPage 
         onBack={() => {}} 
