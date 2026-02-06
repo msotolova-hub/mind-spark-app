@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
   ChevronRight, X, Info, ArrowLeft, Star, Check, CreditCard
@@ -440,18 +440,22 @@ const STRIPE_LINKS = {
   yearly: 'https://buy.stripe.com/test_dRmbJ12iY1fN2KBewT7ok01'
 };
 
-const PricingPage = ({ onBack }) => {
+const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy }) => {
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-          <button 
-            onClick={onBack}
-            className="flex items-center gap-2 text-[#a69d90] hover:text-[#ff8474] transition-colors"
-          >
-            <ArrowLeft size={18} />
-            <span className="text-sm font-medium">Zpět na dashboard</span>
-          </button>
+          {showBackButton ? (
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-2 text-[#a69d90] hover:text-[#ff8474] transition-colors"
+            >
+              <ArrowLeft size={18} />
+              <span className="text-sm font-medium">Zpět na dashboard</span>
+            </button>
+          ) : (
+            <div></div>
+          )}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-[#ff8474] flex items-center justify-center">
               <Sparkles size={16} className="text-white" />
@@ -559,6 +563,18 @@ const PricingPage = ({ onBack }) => {
         <p className="text-center text-sm text-[#a69d90] mt-8">
           Bezpečná platba přes Stripe · Zrušení kdykoliv · 14denní garance vrácení peněz
         </p>
+        
+        {(onShowTerms || onShowPrivacy) && (
+          <div className="text-center mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
+            {onShowTerms && (
+              <a href="#" onClick={(e) => { e.preventDefault(); onShowTerms(); }} className="hover:text-[#ff8474] transition-colors">Obchodní podmínky</a>
+            )}
+            {onShowTerms && onShowPrivacy && <span>·</span>}
+            {onShowPrivacy && (
+              <a href="#" onClick={(e) => { e.preventDefault(); onShowPrivacy(); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
@@ -784,6 +800,47 @@ const PrivacyContent = () => (
 );
 
 // ============================================
+// PROTECTED CONTENT - kontrola předplatného
+// ============================================
+const ProtectedContent = ({ children, onShowPricing, onShowTerms, onShowPrivacy }) => {
+  const { user, isLoaded } = useUser();
+  
+  // Čekáme na načtení uživatele
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-[#ff8474] flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <Sparkles size={24} className="text-white" />
+          </div>
+          <p className="text-[#a69d90]">Načítání...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Kontrola předplatného
+  const subscription = user?.publicMetadata?.subscription;
+  const hasActiveSubscription = subscription?.status === 'active';
+  
+  // PRO TESTOVÁNÍ: odkomentuj následující řádek pro přeskočení kontroly
+  // const hasActiveSubscription = true;
+  
+  if (!hasActiveSubscription) {
+    return (
+      <PricingPage 
+        onBack={() => {}} 
+        showBackButton={false}
+        onShowTerms={onShowTerms}
+        onShowPrivacy={onShowPrivacy}
+      />
+    );
+  }
+  
+  return children;
+};
+
+// ============================================
 // HLAVNÍ APP
 // ============================================
 const App = () => {
@@ -860,38 +917,44 @@ const App = () => {
 
       {/* Aplikace pro přihlášené */}
       <SignedIn>
-        {currentView === 'dashboard' && !legalPage && !showPricing && (
-          <Dashboard 
-            onSelectTechnique={handleSelectTechnique}
-            onShowInfo={(t) => setInfoTechnique(t)}
-            onShowTerms={() => setLegalPage('terms')}
-            onShowPrivacy={() => setLegalPage('privacy')}
-            onShowPricing={() => setShowPricing(true)}
-          />
-        )}
-        
-        {currentView === 'technique' && !legalPage && !showPricing && renderTechnique()}
-        
-        {showPricing && (
-          <PricingPage onBack={() => setShowPricing(false)} />
-        )}
-        
-        {legalPage && (
+        {legalPage ? (
           <LegalPage 
             type={legalPage} 
             onBack={() => setLegalPage(null)} 
           />
-        )}
-        
-        {infoTechnique && (
-          <MethodInfoModal 
-            technique={infoTechnique} 
-            onClose={() => setInfoTechnique(null)}
-            onStart={() => { 
-              handleSelectTechnique(infoTechnique); 
-              setInfoTechnique(null); 
-            }}
-          />
+        ) : (
+          <ProtectedContent 
+            onShowPricing={() => setShowPricing(true)}
+            onShowTerms={() => setLegalPage('terms')}
+            onShowPrivacy={() => setLegalPage('privacy')}
+          >
+            {currentView === 'dashboard' && !showPricing && (
+              <Dashboard 
+                onSelectTechnique={handleSelectTechnique}
+                onShowInfo={(t) => setInfoTechnique(t)}
+                onShowTerms={() => setLegalPage('terms')}
+                onShowPrivacy={() => setLegalPage('privacy')}
+                onShowPricing={() => setShowPricing(true)}
+              />
+            )}
+            
+            {currentView === 'technique' && !showPricing && renderTechnique()}
+            
+            {showPricing && (
+              <PricingPage onBack={() => setShowPricing(false)} />
+            )}
+            
+            {infoTechnique && (
+              <MethodInfoModal 
+                technique={infoTechnique} 
+                onClose={() => setInfoTechnique(null)}
+                onStart={() => { 
+                  handleSelectTechnique(infoTechnique); 
+                  setInfoTechnique(null); 
+                }}
+              />
+            )}
+          </ProtectedContent>
         )}
       </SignedIn>
     </>
