@@ -352,7 +352,7 @@ const TechniqueCard = ({ technique, onClick, onInfoClick }) => {
 // ============================================
 // DASHBOARD
 // ============================================
-const Dashboard = ({ onSelectTechnique, onShowInfo }) => {
+const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy }) => {
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -414,8 +414,8 @@ const Dashboard = ({ onSelectTechnique, onShowInfo }) => {
             © 2026 Mind Spark · Profesionální nástroje pro kouče
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="#" className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Podpora</a>
-            <a href="#" className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Podmínky</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onShowTerms && onShowTerms(); }} className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Podmínky</a>
+            <a href="#" onClick={(e) => { e.preventDefault(); onShowPrivacy && onShowPrivacy(); }} className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
           </div>
         </div>
       </footer>
@@ -424,12 +424,232 @@ const Dashboard = ({ onSelectTechnique, onShowInfo }) => {
 };
 
 // ============================================
+// PRÁVNÍ STRÁNKY
+// ============================================
+const LegalPage = ({ type, onBack }) => {
+  const isTerms = type === 'terms';
+  
+  return (
+    <div className="min-h-screen bg-[#FAF6F2]">
+      <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-[#a69d90] hover:text-[#ff8474] transition-colors"
+          >
+            <ArrowLeft size={18} />
+            <span className="text-sm font-medium">Zpět na dashboard</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#ff8474] flex items-center justify-center">
+              <Sparkles size={16} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-[#2C2C2C]">Mind Spark</span>
+          </div>
+        </div>
+      </header>
+      
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#e5ddd2] p-8 md:p-12">
+          {isTerms ? <TermsContent /> : <PrivacyContent />}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+const SectionTitle = ({ children }) => (
+  <h2 className="text-xl font-bold text-[#2C2C2C] mt-8 mb-4">{children}</h2>
+);
+
+const P = ({ children }) => (
+  <p className="text-[#4a4a4a] leading-relaxed mb-3">{children}</p>
+);
+
+const BulletItem = ({ children }) => (
+  <li className="text-[#4a4a4a] leading-relaxed mb-2 ml-6 list-disc">{children}</li>
+);
+
+const TermsContent = () => (
+  <div>
+    <h1 className="text-3xl font-bold text-[#2C2C2C] mb-2 text-center">Obchodní podmínky</h1>
+    <p className="text-center text-[#a69d90] mb-10">Platné od 1. 2. 2026</p>
+
+    <SectionTitle>I. Úvodní ustanovení</SectionTitle>
+    <P>1.1 Tyto obchodní podmínky (dále jen <strong>"Podmínky"</strong>) upravují práva a povinnosti mezi provozovatelem a uživatelem webové aplikace Mind Spark (dále jen <strong>"Aplikace"</strong>).</P>
+    <P>1.2 <strong>Provozovatelem</strong> Aplikace je Michaela Šotolová, IČO: 24411604, se sídlem v České republice, kontaktní e-mail: info@sotolovamichaela.com (dále jen <strong>"Provozovatel"</strong>).</P>
+    <P>1.3 <strong>Uživatelem</strong> je fyzická nebo právnická osoba, která se zaregistruje a využívá Aplikaci pro účely profesionálního koučování (dále jen <strong>"Uživatel"</strong>).</P>
+    <P>1.4 Aplikace je určena výhradně pro profesionální kouče a osoby působící v oblasti koučování, mentoringu a osobního rozvoje.</P>
+
+    <SectionTitle>II. Popis služby</SectionTitle>
+    <P>2.1 Aplikace Mind Spark poskytuje digitální koučovací nástroje, které zahrnují zejména:</P>
+    <ul className="mb-4">
+      <BulletItem>interaktivní koučovací techniky (Kolo Rovnováhy, Energetický Kotel, Disney Model, 3 Rádcové, Logické úrovně a další)</BulletItem>
+      <BulletItem>pracovní listy a průvodce jednotlivými technikami</BulletItem>
+      <BulletItem>možnost exportu výstupů do PDF</BulletItem>
+      <BulletItem>další funkce dle aktuální nabídky</BulletItem>
+    </ul>
+    <P>2.2 Provozovatel si vyhrazuje právo rozšiřovat, upravovat nebo omezovat rozsah funkcí Aplikace.</P>
+
+    <SectionTitle>III. Registrace a uživatelský účet</SectionTitle>
+    <P>3.1 Pro využívání Aplikace je nutná registrace prostřednictvím e-mailové adresy nebo účtu Google.</P>
+    <P>3.2 Uživatel je povinen uvést pravdivé a aktuální údaje při registraci.</P>
+    <P>3.3 Uživatel je odpovědný za zabezpečení svého účtu a nesmí své přihlašovací údaje sdílet s třetími osobami.</P>
+    <P>3.4 Provozovatel má právo zablokovat nebo zrušit účet Uživatele v případě porušení těchto Podmínek.</P>
+
+    <SectionTitle>IV. Předplatné a platební podmínky</SectionTitle>
+    <P>4.1 Aplikace je poskytována na základě placeného předplatného. Uživatel si může zvolit:</P>
+    <ul className="mb-4">
+      <BulletItem><strong>Měsíční předplatné</strong> - automaticky se obnovuje každý měsíc</BulletItem>
+      <BulletItem><strong>Roční předplatné</strong> - automaticky se obnovuje každý rok</BulletItem>
+    </ul>
+    <P>4.2 Aktuální ceny předplatného jsou uvedeny na webových stránkách Aplikace. Provozovatel si vyhrazuje právo ceny měnit, o čemž bude Uživatel informován nejméně 30 dní předem.</P>
+    <P>4.3 Platba je realizována prostřednictvím platební brány Stripe. Provozovatel nemá přístup k platebním údajům Uživatele (číslo karty apod.).</P>
+    <P>4.4 Provozovatel může nabízet slevové kódy poskytující zvýhodněné ceny předplatného. Slevové kódy nelze vzájemně kombinovat, pokud není uvedeno jinak, a mají omezenou platnost.</P>
+    <P>4.5 Předplatné se automaticky obnovuje na konci každého platebního období, pokud jej Uživatel nezruší nejpozději 24 hodin před koncem aktuálního období.</P>
+
+    <SectionTitle>V. Zrušení předplatného a vrácení platby</SectionTitle>
+    <P>5.1 Uživatel může předplatné zrušit kdykoliv prostřednictvím svého účtu v Aplikaci. Zrušení nabude účinnosti na konci aktuálního platebního období.</P>
+    <P>5.2 Po zrušení předplatného má Uživatel přístup k Aplikaci do konce zaplaceného období.</P>
+    <P>5.3 Uživatel, který je spotřebitelem ve smyslu zákona č. 89/2012 Sb., občanského zákoníku, má právo odstoupit od smlouvy do 14 dnů od uzavření smlouvy bez udání důvodu. V takovém případě bude Uživateli vrácena platba v plné výši.</P>
+
+    <SectionTitle>VI. Práva a povinnosti Uživatele</SectionTitle>
+    <P>6.1 Uživatel má právo využívat Aplikaci v rozsahu zvoleného předplatného.</P>
+    <P>6.2 Uživatel se zavazuje:</P>
+    <ul className="mb-4">
+      <BulletItem>používat Aplikaci v souladu s těmito Podmínkami a platnými právními předpisy</BulletItem>
+      <BulletItem>nesdílet svůj účet ani přihlašovací údaje s třetími osobami</BulletItem>
+      <BulletItem>nekopírovat, nerozmnožovat ani jinak nešířit obsah Aplikace bez souhlasu Provozovatele</BulletItem>
+      <BulletItem>nepokoušet se o neoprávněný přístup k systémům Aplikace</BulletItem>
+    </ul>
+
+    <SectionTitle>VII. Práva a povinnosti Provozovatele</SectionTitle>
+    <P>7.1 Provozovatel se zavazuje zajistit dostupnost Aplikace v rozsahu technických možností. Provozovatel neodpovídá za krátkodobé výpadky způsobené údržbou nebo technickými problémy třetích stran.</P>
+    <P>7.2 Provozovatel má právo provádět plánované i neplánované odstávky za účelem údržby a aktualizace Aplikace.</P>
+
+    <SectionTitle>VIII. Duševní vlastnictví</SectionTitle>
+    <P>8.1 Veškerý obsah Aplikace, včetně koučovacích technik, textů, grafiky, designu a softwaru, je chráněn autorským právem a je majetkem Provozovatele.</P>
+    <P>8.2 Předplatné opravňuje Uživatele k osobnímu využití Aplikace v rámci své koučovací praxe. Nezakládá licenci k dalšímu šíření nebo komerčnímu využití obsahu Aplikace.</P>
+
+    <SectionTitle>IX. Omezení odpovědnosti</SectionTitle>
+    <P>9.1 Aplikace slouží jako podpůrný nástroj pro koučovací praxi. Provozovatel neodpovídá za výsledky koučovacích sezení ani za rozhodnutí učiněná na základě výstupů z Aplikace.</P>
+    <P>9.2 Provozovatel nenese odpovědnost za ztrátu dat způsobenou technickými problémy nebo zásahy třetích stran.</P>
+    <P>9.3 Maximální odpovědnost Provozovatele je omezena na výši částky zaplacené Uživatelem za předplatné v posledních 12 měsících.</P>
+
+    <SectionTitle>X. Reklamace</SectionTitle>
+    <P>10.1 Uživatel má právo reklamovat vady Aplikace písemně na e-mail info@sotolovamichaela.com.</P>
+    <P>10.2 Provozovatel vyřídí reklamaci bez zbytečného odkladu, nejpozději do 30 dnů od jejího obdržení.</P>
+
+    <SectionTitle>XI. Závěrečná ustanovení</SectionTitle>
+    <P>11.1 Tyto Podmínky se řídí právním řádem České republiky, zejména zákonem č. 89/2012 Sb., občanským zákoníkem.</P>
+    <P>11.2 Provozovatel si vyhrazuje právo tyto Podmínky jednostranně měnit. O změnách bude Uživatel informován prostřednictvím e-mailu nebo oznámením v Aplikaci nejméně 14 dní před nabytím účinnosti.</P>
+    <P>11.3 V případě sporů je k rozhodování příslušný obecný soud České republiky.</P>
+    <P>11.4 Pokud je Uživatel spotřebitelem, má právo na mimosoudní řešení spotřebitelských sporů prostřednictvím České obchodní inspekce (www.coi.cz).</P>
+    <P>11.5 Tyto Podmínky nabývají účinnosti dnem 1. 2. 2026.</P>
+  </div>
+);
+
+const PrivacyContent = () => (
+  <div>
+    <h1 className="text-3xl font-bold text-[#2C2C2C] mb-2 text-center">Zásady ochrany osobních údajů</h1>
+    <p className="text-center text-[#a69d90] mb-10">Platné od 1. 2. 2026</p>
+
+    <SectionTitle>I. Správce osobních údajů</SectionTitle>
+    <P>Správcem osobních údajů je Michaela Šotolová, IČO: 24411604, kontaktní e-mail: info@sotolovamichaela.com (dále jen "Správce").</P>
+    <P>Správce zpracovává osobní údaje v souladu s Nařízením Evropského parlamentu a Rady (EU) 2016/679 (GDPR) a zákonem č. 110/2019 Sb., o zpracování osobních údajů.</P>
+
+    <SectionTitle>II. Jaké osobní údaje zpracováváme</SectionTitle>
+    <P><strong>A) Údaje poskytnuté při registraci:</strong></P>
+    <ul className="mb-4">
+      <BulletItem>jméno a příjmení</BulletItem>
+      <BulletItem>e-mailová adresa</BulletItem>
+      <BulletItem>profilový obrázek (při přihlášení přes Google)</BulletItem>
+    </ul>
+    <P><strong>B) Údaje zpracovávané při platbě:</strong></P>
+    <ul className="mb-4">
+      <BulletItem>fakturační údaje</BulletItem>
+      <BulletItem>historie plateb a předplatného</BulletItem>
+      <BulletItem>platební údaje (zpracovává výhradně platební brána Stripe; Správce k nim nemá přístup)</BulletItem>
+    </ul>
+    <P><strong>C) Technické údaje:</strong></P>
+    <ul className="mb-4">
+      <BulletItem>IP adresa</BulletItem>
+      <BulletItem>typ prohlížeče a operačního systému</BulletItem>
+      <BulletItem>datum a čas přístupu</BulletItem>
+    </ul>
+
+    <SectionTitle>III. Účel zpracování</SectionTitle>
+    <P>Osobní údaje zpracováváme za těmito účely:</P>
+    <ul className="mb-4">
+      <BulletItem><strong>Poskytování služby</strong> - registrace, přihlášení, správa účtu a zpřístupnění funkcí Aplikace</BulletItem>
+      <BulletItem><strong>Správa předplatného</strong> - zpracování plateb, fakturace, uplatnění slevových kódů</BulletItem>
+      <BulletItem><strong>Komunikace</strong> - zasílání informací o změnách služby, technických oznámení a odpovědí na dotazy</BulletItem>
+      <BulletItem><strong>Zlepšování služby</strong> - analýza využívání Aplikace za účelem jejího vylepšování</BulletItem>
+      <BulletItem><strong>Plnění právních povinností</strong> - vedení účetnictví, daňové povinnosti</BulletItem>
+    </ul>
+
+    <SectionTitle>IV. Právní základ zpracování</SectionTitle>
+    <ul className="mb-4">
+      <BulletItem><strong>Plnění smlouvy</strong> (čl. 6 odst. 1 písm. b) GDPR) - zpracování nezbytné pro poskytování služby</BulletItem>
+      <BulletItem><strong>Oprávněný zájem</strong> (čl. 6 odst. 1 písm. f) GDPR) - zlepšování služby, prevence zneužití</BulletItem>
+      <BulletItem><strong>Plnění právní povinnosti</strong> (čl. 6 odst. 1 písm. c) GDPR) - účetní a daňové povinnosti</BulletItem>
+    </ul>
+
+    <SectionTitle>V. Sdílení údajů s třetími stranami</SectionTitle>
+    <P>Pro zajištění funkčnosti Aplikace využíváme následující zpracovatele:</P>
+    <ul className="mb-4">
+      <BulletItem><strong>Clerk</strong> (Clerk, Inc., USA) - autentizace a správa uživatelských účtů</BulletItem>
+      <BulletItem><strong>Stripe</strong> (Stripe, Inc., USA) - zpracování plateb</BulletItem>
+      <BulletItem><strong>Vercel</strong> (Vercel, Inc., USA) - hosting Aplikace</BulletItem>
+    </ul>
+    <P>Tito zpracovatelé jsou vázáni smluvními podmínkami zajišťujícími ochranu osobních údajů v souladu s GDPR. Přenos údajů do USA je zajištěn na základě standardních smluvních doložek (SCC) a/nebo rozhodnutí Evropské komise o přiměřenosti (EU-US Data Privacy Framework).</P>
+
+    <SectionTitle>VI. Soubory cookies</SectionTitle>
+    <P>Aplikace používá pouze nezbytné technické cookies pro zajištění přihlášení a funkčnosti. Tyto cookies jsou nezbytné pro provoz Aplikace a nelze je odmítnout.</P>
+    <P>Aplikace nepoužívá marketingové ani analytické cookies třetích stran.</P>
+
+    <SectionTitle>VII. Doba uchování údajů</SectionTitle>
+    <ul className="mb-4">
+      <BulletItem><strong>Údaje o účtu:</strong> po dobu trvání účtu a 30 dnů po jeho zrušení</BulletItem>
+      <BulletItem><strong>Fakturační údaje:</strong> po dobu stanovenou daňovými a účetními předpisy (až 10 let)</BulletItem>
+      <BulletItem><strong>Technické údaje:</strong> maximálně 90 dnů</BulletItem>
+    </ul>
+
+    <SectionTitle>VIII. Vaše práva</SectionTitle>
+    <P>Jako subjekt údajů máte následující práva:</P>
+    <ul className="mb-4">
+      <BulletItem><strong>Právo na přístup</strong> - získat informace o tom, jaké údaje o vás zpracováváme</BulletItem>
+      <BulletItem><strong>Právo na opravu</strong> - požadovat opravu nepřesných údajů</BulletItem>
+      <BulletItem><strong>Právo na výmaz</strong> - požadovat smazání svých údajů ("právo být zapomenut")</BulletItem>
+      <BulletItem><strong>Právo na omezení zpracování</strong> - požadovat omezení zpracování za určitých podmínek</BulletItem>
+      <BulletItem><strong>Právo na přenositelnost</strong> - získat své údaje ve strukturovaném formátu</BulletItem>
+      <BulletItem><strong>Právo vznést námitku</strong> - proti zpracování založenému na oprávněném zájmu</BulletItem>
+      <BulletItem><strong>Právo podat stížnost</strong> - u Úřadu pro ochranu osobních údajů (www.uoou.cz)</BulletItem>
+    </ul>
+    <P>Pro uplatnění svých práv nás kontaktujte na e-mailu info@sotolovamichaela.com. Na vaši žádost odpovíme bez zbytečného odkladu, nejpozději do 30 dnů.</P>
+
+    <SectionTitle>IX. Zabezpečení údajů</SectionTitle>
+    <P>Správce přijal vhodná technická a organizační opatření k ochraně osobních údajů, včetně šifrování přenosu dat (SSL/TLS), zabezpečeného uložení dat u zpracovatelů a pravidelného přezkoumávání bezpečnostních opatření.</P>
+
+    <SectionTitle>X. Změny zásad ochrany osobních údajů</SectionTitle>
+    <P>Správce si vyhrazuje právo tyto zásady aktualizovat. O podstatných změnách bude Uživatel informován prostřednictvím e-mailu nebo oznámením v Aplikaci.</P>
+    <P>Tyto zásady nabývají účinnosti dnem 1. 2. 2026.</P>
+
+    <SectionTitle>Kontakt</SectionTitle>
+    <P><strong>Michaela Šotolová</strong></P>
+    <P>IČO: 24411604</P>
+    <P>E-mail: info@sotolovamichaela.com</P>
+  </div>
+);
+
+// ============================================
 // HLAVNÍ APP
 // ============================================
 const App = () => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [selectedTechnique, setSelectedTechnique] = useState(null);
   const [infoTechnique, setInfoTechnique] = useState(null);
+  const [legalPage, setLegalPage] = useState(null);
 
   const handleSelectTechnique = (technique) => {
     setSelectedTechnique(technique);
@@ -468,6 +688,7 @@ const App = () => {
       
       {/* Přihlašovací obrazovka pro nepřihlášené */}
       <SignedOut>
+        {!legalPage ? (
         <div className="min-h-screen bg-[#FAF6F2] flex flex-col items-center justify-center p-6">
           <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
             <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
@@ -483,20 +704,37 @@ const App = () => {
             <p className="mt-6 text-sm text-[#a69d90]">
               Nemáte účet? Registrace je součástí přihlášení.
             </p>
+            <div className="mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
+              <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('terms'); }} className="hover:text-[#ff8474] transition-colors">Podmínky</a>
+              <span>·</span>
+              <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('privacy'); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+            </div>
           </div>
         </div>
+        ) : (
+          <LegalPage type={legalPage} onBack={() => setLegalPage(null)} />
+        )}
       </SignedOut>
 
       {/* Aplikace pro přihlášené */}
       <SignedIn>
-        {currentView === 'dashboard' && (
+        {currentView === 'dashboard' && !legalPage && (
           <Dashboard 
             onSelectTechnique={handleSelectTechnique}
             onShowInfo={(t) => setInfoTechnique(t)}
+            onShowTerms={() => setLegalPage('terms')}
+            onShowPrivacy={() => setLegalPage('privacy')}
           />
         )}
         
-        {currentView === 'technique' && renderTechnique()}
+        {currentView === 'technique' && !legalPage && renderTechnique()}
+        
+        {legalPage && (
+          <LegalPage 
+            type={legalPage} 
+            onBack={() => setLegalPage(null)} 
+          />
+        )}
         
         {infoTechnique && (
           <MethodInfoModal 
