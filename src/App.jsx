@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
-  ChevronRight, X, Info, ArrowLeft
+  ChevronRight, X, Info, ArrowLeft, Star, Check, CreditCard
 } from 'lucide-react';
 
 // Import jednotlivých technik
@@ -352,7 +352,7 @@ const TechniqueCard = ({ technique, onClick, onInfoClick }) => {
 // ============================================
 // DASHBOARD
 // ============================================
-const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy }) => {
+const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, onShowPricing }) => {
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -367,7 +367,15 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy }
             </div>
           </div>
           
-          <UserButton 
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onShowPricing}
+              className="flex items-center gap-2 bg-[#ff8474] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#e06b5c] transition-colors text-sm"
+            >
+              <CreditCard size={16} />
+              <span className="hidden sm:inline">Předplatné</span>
+            </button>
+            <UserButton 
               afterSignOutUrl="/"
               appearance={{
                 elements: {
@@ -375,6 +383,7 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy }
                 }
               }}
             />
+          </div>
         </div>
       </header>
       
@@ -419,6 +428,138 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy }
           </div>
         </div>
       </footer>
+    </div>
+  );
+};
+
+// ============================================
+// STRÁNKA S CENAMI
+// ============================================
+const STRIPE_LINKS = {
+  monthly: 'https://buy.stripe.com/test_cNi4gz0aQ6A784VgF17ok00',
+  yearly: 'https://buy.stripe.com/test_dRmbJ12iY1fN2KBewT7ok01'
+};
+
+const PricingPage = ({ onBack }) => {
+  return (
+    <div className="min-h-screen bg-[#FAF6F2]">
+      <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
+        <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-[#a69d90] hover:text-[#ff8474] transition-colors"
+          >
+            <ArrowLeft size={18} />
+            <span className="text-sm font-medium">Zpět na dashboard</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-[#ff8474] flex items-center justify-center">
+              <Sparkles size={16} className="text-white" />
+            </div>
+            <span className="text-sm font-bold text-[#2C2C2C]">Mind Spark</span>
+          </div>
+        </div>
+      </header>
+      
+      <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#2C2C2C] mb-4">
+            Vyberte si svůj plán
+          </h1>
+          <p className="text-[#78716C] max-w-xl mx-auto">
+            Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          {/* Měsíční plán */}
+          <div className="bg-white rounded-2xl shadow-sm border border-[#e5ddd2] p-8 hover:shadow-lg transition-shadow">
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-[#2C2C2C] mb-2">Měsíční</h3>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-[#2C2C2C]">299 Kč</span>
+                <span className="text-[#a69d90]"> / měsíc</span>
+              </div>
+            </div>
+            
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Všech 5 koučovacích technik</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Export do PDF</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Pracovní listy a průvodce</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Zrušení kdykoliv</span>
+              </li>
+            </ul>
+            
+            <a 
+              href={STRIPE_LINKS.monthly}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors text-center"
+            >
+              Vybrat měsíční
+            </a>
+          </div>
+
+          {/* Roční plán */}
+          <div className="bg-white rounded-2xl shadow-sm border-2 border-[#ff8474] p-8 relative hover:shadow-lg transition-shadow">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#ff8474] text-white text-xs font-bold px-4 py-1 rounded-full">
+              UŠETŘÍTE 17 %
+            </div>
+            
+            <div className="text-center">
+              <h3 className="text-lg font-bold text-[#2C2C2C] mb-2">Roční</h3>
+              <div className="mb-2">
+                <span className="text-4xl font-bold text-[#2C2C2C]">2 490 Kč</span>
+                <span className="text-[#a69d90]"> / rok</span>
+              </div>
+              <p className="text-sm text-[#a69d90] mb-4">= 207 Kč měsíčně</p>
+            </div>
+            
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Všech 5 koučovacích technik</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Export do PDF</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Pracovní listy a průvodce</span>
+              </li>
+              <li className="flex items-center gap-3 text-[#4a4a4a]">
+                <Check size={18} className="text-green-500 flex-shrink-0" />
+                <span>Prioritní podpora</span>
+              </li>
+            </ul>
+            
+            <a 
+              href={STRIPE_LINKS.yearly}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center"
+            >
+              Vybrat roční
+            </a>
+          </div>
+        </div>
+
+        <p className="text-center text-sm text-[#a69d90] mt-8">
+          Bezpečná platba přes Stripe · Zrušení kdykoliv · 14denní garance vrácení peněz
+        </p>
+      </main>
     </div>
   );
 };
@@ -650,6 +791,7 @@ const App = () => {
   const [selectedTechnique, setSelectedTechnique] = useState(null);
   const [infoTechnique, setInfoTechnique] = useState(null);
   const [legalPage, setLegalPage] = useState(null);
+  const [showPricing, setShowPricing] = useState(false);
 
   const handleSelectTechnique = (technique) => {
     setSelectedTechnique(technique);
@@ -718,16 +860,21 @@ const App = () => {
 
       {/* Aplikace pro přihlášené */}
       <SignedIn>
-        {currentView === 'dashboard' && !legalPage && (
+        {currentView === 'dashboard' && !legalPage && !showPricing && (
           <Dashboard 
             onSelectTechnique={handleSelectTechnique}
             onShowInfo={(t) => setInfoTechnique(t)}
             onShowTerms={() => setLegalPage('terms')}
             onShowPrivacy={() => setLegalPage('privacy')}
+            onShowPricing={() => setShowPricing(true)}
           />
         )}
         
-        {currentView === 'technique' && !legalPage && renderTechnique()}
+        {currentView === 'technique' && !legalPage && !showPricing && renderTechnique()}
+        
+        {showPricing && (
+          <PricingPage onBack={() => setShowPricing(false)} />
+        )}
         
         {legalPage && (
           <LegalPage 
