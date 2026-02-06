@@ -852,64 +852,38 @@ const PrivacyContent = () => (
 // PROTECTED CONTENT - kontrola předplatného
 // ============================================
 const ProtectedContent = ({ children, onShowPricing, onShowTerms, onShowPrivacy }) => {
-  const { user, isLoaded } = useUser();
-  const [showLoading, setShowLoading] = useState(true);
-  
-  // Při načtení uživatele uložíme stav do localStorage
-  React.useEffect(() => {
-    if (isLoaded && user) {
-      const subscription = user.publicMetadata?.subscription;
-      if (subscription?.status === 'active') {
-        localStorage.setItem('mind-spark-subscription', 'active');
-      } else {
-        localStorage.removeItem('mind-spark-subscription');
-      }
-    }
-  }, [isLoaded, user]);
-  
-  // Skryjeme loading po načtení NEBO po 1.5 sekundách
-  React.useEffect(() => {
-    if (isLoaded) {
-      setShowLoading(false);
-    } else {
-      const timer = setTimeout(() => setShowLoading(false), 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoaded]);
-  
-  // Krátký loading state
-  if (showLoading && !isLoaded) {
-    return (
-      <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-[#ff8474] flex items-center justify-center mx-auto mb-4 animate-pulse">
-            <Sparkles size={24} className="text-white" />
-          </div>
-          <p className="text-[#a69d90]">Načítání...</p>
-        </div>
-      </div>
-    );
-  }
+  const { user } = useUser();
   
   // Kontrola předplatného
   const subscription = user?.publicMetadata?.subscription;
   const hasActiveSubscription = subscription?.status === 'active';
   
-  // Fallback na localStorage cache (pro rychlejší načtení)
-  const cachedSubscription = typeof window !== 'undefined' && localStorage.getItem('mind-spark-subscription') === 'active';
+  // Cache v localStorage
+  React.useEffect(() => {
+    if (user) {
+      if (hasActiveSubscription) {
+        localStorage.setItem('ms-sub', 'active');
+      } else {
+        localStorage.removeItem('ms-sub');
+      }
+    }
+  }, [user, hasActiveSubscription]);
   
-  if (!hasActiveSubscription && !cachedSubscription) {
-    return (
-      <PricingPage 
+  // Použij cache nebo Clerk data
+  const cachedActive = typeof window !== 'undefined' && localStorage.getItem('ms-sub') === 'active';
+  
+  if (hasActiveSubscription || cachedActive) {
+    return children;
+  }
+  
+  return (
+    <PricingPage 
         onBack={() => {}} 
         showBackButton={false}
         onShowTerms={onShowTerms}
         onShowPrivacy={onShowPrivacy}
       />
     );
-  }
-  
-  return children;
 };
 
 // ============================================
