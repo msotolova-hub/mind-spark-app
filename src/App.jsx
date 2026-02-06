@@ -350,6 +350,14 @@ const TechniqueCard = ({ technique, onClick, onInfoClick }) => {
 };
 
 // ============================================
+// STRIPE ODKAZY
+// ============================================
+const STRIPE_LINKS = {
+  monthly: 'https://buy.stripe.com/test_cNi4gz0aQ6A784VgF17ok00',
+  yearly: 'https://buy.stripe.com/test_dRmbJ12iY1fN2KBewT7ok01'
+};
+
+// ============================================
 // DASHBOARD
 // ============================================
 const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, onShowPricing }) => {
@@ -442,6 +450,38 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
           </div>
         </div>
       </footer>
+      
+      {/* Paywall pro neplatící uživatele */}
+      {!isActive && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
+              <Sparkles size={32} className="text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-[#2C2C2C] mb-2">Aktivujte Mind Spark Pro</h2>
+            <p className="text-[#78716C] mb-6">
+              Získejte přístup ke všem koučovacím technikám a profesionálním nástrojům.
+            </p>
+            <div className="space-y-3">
+              <a 
+                href={STRIPE_LINKS.monthly}
+                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors"
+              >
+                Měsíční - 299 Kč
+              </a>
+              <a 
+                href={STRIPE_LINKS.yearly}
+                className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors"
+              >
+                Roční - 2 490 Kč (ušetříte 17 %)
+              </a>
+            </div>
+            <p className="mt-6 text-xs text-[#a69d90]">
+              Bezpečná platba přes Stripe · Zrušení kdykoliv
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -449,10 +489,6 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
 // ============================================
 // STRÁNKA S CENAMI
 // ============================================
-const STRIPE_LINKS = {
-  monthly: 'https://buy.stripe.com/test_cNi4gz0aQ6A784VgF17ok00',
-  yearly: 'https://buy.stripe.com/test_dRmbJ12iY1fN2KBewT7ok01'
-};
 
 const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy }) => {
   const { user } = useUser();
@@ -851,39 +887,23 @@ const PrivacyContent = () => (
 // ============================================
 // PROTECTED CONTENT - kontrola předplatného
 // ============================================
-const ProtectedContent = ({ children, onShowPricing, onShowTerms, onShowPrivacy }) => {
+const ProtectedContent = ({ children, onShowTerms, onShowPrivacy }) => {
   const { user } = useUser();
   
-  // Kontrola předplatného
-  const subscription = user?.publicMetadata?.subscription;
-  const hasActiveSubscription = subscription?.status === 'active';
-  
-  // Cache v localStorage
-  React.useEffect(() => {
-    if (user) {
-      if (hasActiveSubscription) {
-        localStorage.setItem('ms-sub', 'active');
-      } else {
-        localStorage.removeItem('ms-sub');
-      }
-    }
-  }, [user, hasActiveSubscription]);
-  
-  // Použij cache nebo Clerk data
-  const cachedActive = typeof window !== 'undefined' && localStorage.getItem('ms-sub') === 'active';
-  
-  if (hasActiveSubscription || cachedActive) {
+  // Jednoduchá kontrola - má aktivní předplatné?
+  if (user?.publicMetadata?.subscription?.status === 'active') {
     return children;
   }
   
+  // Nemá předplatné - ukázat ceník
   return (
     <PricingPage 
-        onBack={() => {}} 
-        showBackButton={false}
-        onShowTerms={onShowTerms}
-        onShowPrivacy={onShowPrivacy}
-      />
-    );
+      onBack={() => {}} 
+      showBackButton={false}
+      onShowTerms={onShowTerms}
+      onShowPrivacy={onShowPrivacy}
+    />
+  );
 };
 
 // ============================================
@@ -968,13 +988,11 @@ const App = () => {
             type={legalPage} 
             onBack={() => setLegalPage(null)} 
           />
+        ) : showPricing ? (
+          <PricingPage onBack={() => setShowPricing(false)} />
         ) : (
-          <ProtectedContent 
-            onShowPricing={() => setShowPricing(true)}
-            onShowTerms={() => setLegalPage('terms')}
-            onShowPrivacy={() => setLegalPage('privacy')}
-          >
-            {currentView === 'dashboard' && !showPricing && (
+          <>
+            {currentView === 'dashboard' && (
               <Dashboard 
                 onSelectTechnique={handleSelectTechnique}
                 onShowInfo={(t) => setInfoTechnique(t)}
@@ -984,11 +1002,7 @@ const App = () => {
               />
             )}
             
-            {currentView === 'technique' && !showPricing && renderTechnique()}
-            
-            {showPricing && (
-              <PricingPage onBack={() => setShowPricing(false)} />
-            )}
+            {currentView === 'technique' && renderTechnique()}
             
             {infoTechnique && (
               <MethodInfoModal 
@@ -1000,7 +1014,7 @@ const App = () => {
                 }}
               />
             )}
-          </ProtectedContent>
+          </>
         )}
       </SignedIn>
     </>
