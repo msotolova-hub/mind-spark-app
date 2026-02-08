@@ -382,7 +382,7 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
                 className="flex items-center gap-2 bg-green-100 text-green-700 font-medium py-2 px-4 rounded-lg hover:bg-green-200 transition-colors text-sm"
               >
                 <Check size={16} />
-                <span className="hidden sm:inline">Pro aktivní</span>
+                <span className="hidden sm:inline">Předplatné</span>
               </button>
             ) : (
               <button
