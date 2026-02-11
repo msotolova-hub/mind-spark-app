@@ -545,7 +545,7 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
             <div className="text-center">
               <h3 className="text-lg font-bold text-[#2C2C2C] mb-2">Měsíční</h3>
               <div className="mb-6">
-                <span className="text-4xl font-bold text-[#2C2C2C]">299 Kč</span>
+                <span className="text-4xl font-bold text-[#2C2C2C]">250 Kč</span>
                 <span className="text-[#a69d90]"> / měsíc</span>
               </div>
             </div>
