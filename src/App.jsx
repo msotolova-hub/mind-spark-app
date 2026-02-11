@@ -619,9 +619,13 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
             </ul>
             
             {isSubscribed ? (
-              <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
-                Upgrade
-              </div>
+              <button 
+                onClick={() => handleCheckout('yearly')}
+                disabled={loading !== null}
+                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center disabled:opacity-50"
+              >
+                {loading === 'yearly' ? 'Načítání...' : 'Přejít na roční'}
+              </button>
             ) : (
               <button 
                 onClick={() => handleCheckout('yearly')}
