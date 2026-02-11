@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser, useAuth, ClerkLoaded, ClerkLoading } from '@clerk/clerk-react';
+import { SignInButton, UserButton, useUser, useAuth } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
   ChevronRight, X, Info, ArrowLeft, Star, Check, CreditCard
@@ -959,12 +959,14 @@ const App = () => {
     }
   };
 
-  return (
-    <>
-      <GlobalStyles />
-      
-      {/* Loading state pro Clerk */}
-      <ClerkLoading>
+  const { isLoaded, isSignedIn } = useAuth();
+  const { user } = useUser();
+
+  // Clerk se ještě nenačetl
+  if (!isLoaded) {
+    return (
+      <>
+        <GlobalStyles />
         <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
           <div className="text-center">
             <div className="w-12 h-12 rounded-xl bg-[#ff8474] flex items-center justify-center mx-auto mb-4 animate-pulse">
@@ -973,84 +975,107 @@ const App = () => {
             <p className="text-[#a69d90]">Načítání...</p>
           </div>
         </div>
-      </ClerkLoading>
-      
-      <ClerkLoaded>
-      {/* Přihlašovací obrazovka pro nepřihlášené */}
-      <SignedOut>
-        {!legalPage ? (
-        <div className="min-h-screen bg-[#FAF6F2] flex flex-col items-center justify-center p-6">
-          <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
-            <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
-              <Sparkles size={32} className="text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-[#2C2C2C] mb-2">Mind Spark</h1>
-            <p className="text-[#a69d90] mb-8">Profesionální koučovací nástroje</p>
-            <SignInButton mode="modal">
-              <button className="w-full bg-[#ff8474] text-white font-bold py-4 px-8 rounded-xl hover:bg-[#e06b5c] transition-colors text-lg">
-                Přihlásit se
-              </button>
-            </SignInButton>
-            <p className="mt-6 text-sm text-[#a69d90]">
-              Nemáte účet? Registrace je součástí přihlášení.
-            </p>
-            <div className="mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
-              <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('terms'); }} className="hover:text-[#ff8474] transition-colors">Podmínky</a>
-              <span>·</span>
-              <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('privacy'); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+      </>
+    );
+  }
+
+  // NEPŘIHLÁŠENÝ - zobrazit login
+  if (!isSignedIn) {
+    return (
+      <>
+        <GlobalStyles />
+        {legalPage ? (
+          <LegalPage type={legalPage} onBack={() => setLegalPage(null)} />
+        ) : (
+          <div className="min-h-screen bg-[#FAF6F2] flex flex-col items-center justify-center p-6">
+            <div className="bg-white rounded-3xl shadow-xl p-10 max-w-md w-full text-center">
+              <div className="w-16 h-16 rounded-2xl bg-[#ff8474] flex items-center justify-center mx-auto mb-6">
+                <Sparkles size={32} className="text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-[#2C2C2C] mb-2">Mind Spark</h1>
+              <p className="text-[#a69d90] mb-8">Profesionální koučovací nástroje</p>
+              <SignInButton mode="modal">
+                <button className="w-full bg-[#ff8474] text-white font-bold py-4 px-8 rounded-xl hover:bg-[#e06b5c] transition-colors text-lg">
+                  Přihlásit se
+                </button>
+              </SignInButton>
+              <p className="mt-6 text-sm text-[#a69d90]">
+                Nemáte účet? Registrace je součástí přihlášení.
+              </p>
+              <div className="mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
+                <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('terms'); }} className="hover:text-[#ff8474] transition-colors">Podmínky</a>
+                <span>·</span>
+                <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('privacy'); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+              </div>
             </div>
           </div>
-        </div>
-        ) : (
-          <LegalPage type={legalPage} onBack={() => setLegalPage(null)} />
         )}
-      </SignedOut>
+      </>
+    );
+  }
 
-      {/* Aplikace pro přihlášené */}
-      <SignedIn>
-        {legalPage ? (
-          <LegalPage 
-            type={legalPage} 
-            onBack={() => setLegalPage(null)} 
-          />
-        ) : (
-          <ProtectedContent 
-            onShowTerms={() => setLegalPage('terms')}
-            onShowPrivacy={() => setLegalPage('privacy')}
-          >
-            {showPricing ? (
-              <PricingPage onBack={() => setShowPricing(false)} isSubscribed={true} />
-            ) : (
-              <>
-                {currentView === 'dashboard' && (
-                  <Dashboard 
-                    onSelectTechnique={handleSelectTechnique}
-                    onShowInfo={(t) => setInfoTechnique(t)}
-                    onShowTerms={() => setLegalPage('terms')}
-                    onShowPrivacy={() => setLegalPage('privacy')}
-                    onShowPricing={() => setShowPricing(true)}
-                    isSubscribed={true}
-                  />
-                )}
-                
-                {currentView === 'technique' && renderTechnique()}
-                
-                {infoTechnique && (
-                  <MethodInfoModal 
-                    technique={infoTechnique} 
-                    onClose={() => setInfoTechnique(null)}
-                    onStart={() => { 
-                      handleSelectTechnique(infoTechnique); 
-                      setInfoTechnique(null); 
-                    }}
-                  />
-                )}
-              </>
-            )}
-          </ProtectedContent>
-        )}
-      </SignedIn>
-      </ClerkLoaded>
+  // PŘIHLÁŠENÝ - zkontrolovat předplatné
+  const hasSubscription = user?.publicMetadata?.subscription?.status === 'active';
+
+  // Legal pages
+  if (legalPage) {
+    return (
+      <>
+        <GlobalStyles />
+        <LegalPage type={legalPage} onBack={() => setLegalPage(null)} />
+      </>
+    );
+  }
+
+  // Nemá předplatné - zobrazit ceník
+  if (!hasSubscription) {
+    return (
+      <>
+        <GlobalStyles />
+        <PricingPage 
+          onBack={() => {}} 
+          showBackButton={false}
+          onShowTerms={() => setLegalPage('terms')}
+          onShowPrivacy={() => setLegalPage('privacy')}
+          isSubscribed={false}
+        />
+      </>
+    );
+  }
+
+  // Má předplatné - zobrazit dashboard nebo techniku
+  return (
+    <>
+      <GlobalStyles />
+      {showPricing ? (
+        <PricingPage onBack={() => setShowPricing(false)} isSubscribed={true} />
+      ) : (
+        <>
+          {currentView === 'dashboard' && (
+            <Dashboard 
+              onSelectTechnique={handleSelectTechnique}
+              onShowInfo={(t) => setInfoTechnique(t)}
+              onShowTerms={() => setLegalPage('terms')}
+              onShowPrivacy={() => setLegalPage('privacy')}
+              onShowPricing={() => setShowPricing(true)}
+              isSubscribed={true}
+            />
+          )}
+          
+          {currentView === 'technique' && renderTechnique()}
+          
+          {infoTechnique && (
+            <MethodInfoModal 
+              technique={infoTechnique} 
+              onClose={() => setInfoTechnique(null)}
+              onStart={() => { 
+                handleSelectTechnique(infoTechnique); 
+                setInfoTechnique(null); 
+              }}
+            />
+          )}
+        </>
+      )}
     </>
   );
 };
