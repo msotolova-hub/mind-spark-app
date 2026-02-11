@@ -22,6 +22,22 @@ export default async function handler(req, res) {
     console.log('Processing payment for user:', userId);
 
     try {
+      // Zjistíme jaký plán uživatel koupil
+      let plan = 'monthly'; // default
+      
+      // Získáme line items ze session
+      const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+      if (lineItems.data.length > 0) {
+        const priceId = lineItems.data[0].price.id;
+        // Porovnáme s environment variables
+        if (priceId === process.env.STRIPE_PRICE_YEARLY) {
+          plan = 'yearly';
+        } else if (priceId === process.env.STRIPE_PRICE_MONTHLY) {
+          plan = 'monthly';
+        }
+      }
+
+      console.log('Detected plan:', plan);
 
       // Aktualizujeme metadata uživatele
       const updateResponse = await fetch(
@@ -36,7 +52,7 @@ export default async function handler(req, res) {
             public_metadata: {
               subscription: {
                 status: 'active',
-                plan: 'pro',
+                plan: plan,
                 stripeCustomerId: session.customer,
                 subscriptionId: session.subscription,
                 activatedAt: new Date().toISOString()
@@ -52,8 +68,8 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Failed to update metadata' });
       }
 
-      console.log('Successfully updated subscription for user:', userId);
-      return res.status(200).json({ received: true, userId });
+      console.log('Successfully updated subscription for user:', userId, 'with plan:', plan);
+      return res.status(200).json({ received: true, userId, plan });
 
     } catch (error) {
       console.error('Webhook error:', error);

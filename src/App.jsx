@@ -450,9 +450,12 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
 // STRÁNKA S CENAMI
 // ============================================
 
-const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy, isSubscribed }) => {
+const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy, isSubscribed, currentPlan }) => {
   const { user } = useUser();
   const [loading, setLoading] = useState(null); // 'monthly' nebo 'yearly' nebo null
+
+  // Získáme aktuální plán z props nebo z user metadata
+  const activePlan = currentPlan || user?.publicMetadata?.subscription?.plan || null;
 
   const handleCheckout = async (plan) => {
     if (!user) {
@@ -521,7 +524,9 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
                 <Check size={20} className="text-green-600" />
               </div>
               <div>
-                <h3 className="font-bold text-green-800">Máte aktivní předplatné Pro</h3>
+                <h3 className="font-bold text-green-800">
+                  Máte aktivní {activePlan === 'yearly' ? 'roční' : 'měsíční'} předplatné
+                </h3>
               </div>
             </div>
           </div>
@@ -569,9 +574,13 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            {isSubscribed ? (
+            {isSubscribed && activePlan === 'monthly' ? (
               <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
                 Aktuální plán
+              </div>
+            ) : isSubscribed && activePlan === 'yearly' ? (
+              <div className="block w-full bg-gray-100 text-gray-400 font-medium py-3 px-6 rounded-xl text-center text-sm">
+                Máte roční předplatné
               </div>
             ) : (
               <button 
@@ -618,7 +627,11 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               </li>
             </ul>
             
-            {isSubscribed ? (
+            {isSubscribed && activePlan === 'yearly' ? (
+              <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
+                Aktuální plán
+              </div>
+            ) : isSubscribed && activePlan === 'monthly' ? (
               <button 
                 onClick={() => handleCheckout('yearly')}
                 disabled={loading !== null}
