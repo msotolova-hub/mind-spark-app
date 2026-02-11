@@ -537,6 +537,50 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
     }
   };
 
+  const handleChangePlan = async (newPlan) => {
+    if (!user || !subscriptionId) {
+      alert('Nelze změnit plán');
+      return;
+    }
+
+    const planName = newPlan === 'yearly' ? 'roční' : 'měsíční';
+    const confirmed = window.confirm(
+      `Opravdu chcete přejít na ${planName} předplatné? Rozdíl v ceně bude automaticky přepočítán.`
+    );
+
+    if (!confirmed) return;
+
+    setLoading(newPlan);
+
+    try {
+      const response = await fetch('/api/change-plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          subscriptionId: subscriptionId,
+          newPlan: newPlan,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(`Plán byl změněn na ${planName}.`);
+        window.location.reload();
+      } else {
+        alert('Chyba při změně plánu: ' + (data.error || 'Neznámá chyba'));
+        setLoading(null);
+      }
+    } catch (error) {
+      console.error('Change plan error:', error);
+      alert('Chyba při změně plánu');
+      setLoading(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -640,9 +684,17 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
                 Aktuální plán
               </div>
-            ) : isSubscribed && activePlan === 'yearly' ? (
+            ) : isSubscribed && activePlan === 'yearly' && subscriptionStatus === 'active' ? (
+              <button 
+                onClick={() => handleChangePlan('monthly')}
+                disabled={loading !== null}
+                className="block w-full bg-white border-2 border-gray-300 text-gray-500 font-medium py-3 px-6 rounded-xl hover:border-[#ff8474] hover:text-[#ff8474] transition-colors text-center disabled:opacity-50"
+              >
+                {loading === 'monthly' ? 'Načítání...' : 'Přejít na měsíční'}
+              </button>
+            ) : isSubscribed && activePlan === 'yearly' && subscriptionStatus === 'canceling' ? (
               <div className="block w-full bg-gray-100 text-gray-400 font-medium py-3 px-6 rounded-xl text-center text-sm">
-                Máte roční předplatné
+                Předplatné se ruší
               </div>
             ) : (
               <button 
@@ -693,14 +745,18 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
               <div className="block w-full bg-gray-100 text-gray-500 font-bold py-3 px-6 rounded-xl text-center">
                 Aktuální plán
               </div>
-            ) : isSubscribed && activePlan === 'monthly' ? (
+            ) : isSubscribed && activePlan === 'monthly' && subscriptionStatus === 'active' ? (
               <button 
-                onClick={() => handleCheckout('yearly')}
+                onClick={() => handleChangePlan('yearly')}
                 disabled={loading !== null}
                 className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center disabled:opacity-50"
               >
                 {loading === 'yearly' ? 'Načítání...' : 'Přejít na roční'}
               </button>
+            ) : isSubscribed && activePlan === 'monthly' && subscriptionStatus === 'canceling' ? (
+              <div className="block w-full bg-gray-100 text-gray-400 font-medium py-3 px-6 rounded-xl text-center text-sm">
+                Předplatné se ruší
+              </div>
             ) : (
               <button 
                 onClick={() => handleCheckout('yearly')}
@@ -979,7 +1035,8 @@ const ProtectedContent = ({ children, onShowTerms, onShowPrivacy }) => {
   }
   
   // Kontrola předplatného
-  const hasSubscription = user?.publicMetadata?.subscription?.status === 'active';
+  const subscriptionStatus = user?.publicMetadata?.subscription?.status;
+  const hasSubscription = subscriptionStatus === 'active' || subscriptionStatus === 'canceling';
   
   if (hasSubscription) {
     return children;
@@ -1094,7 +1151,8 @@ const App = () => {
   }
 
   // PŘIHLÁŠENÝ - zkontrolovat předplatné
-  const hasSubscription = user?.publicMetadata?.subscription?.status === 'active';
+  const subscriptionStatus = user?.publicMetadata?.subscription?.status;
+  const hasSubscription = subscriptionStatus === 'active' || subscriptionStatus === 'canceling';
 
   // Legal pages
   if (legalPage) {
