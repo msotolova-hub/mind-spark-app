@@ -456,6 +456,9 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
 
   // Získáme aktuální plán z props nebo z user metadata
   const activePlan = currentPlan || user?.publicMetadata?.subscription?.plan || null;
+  const subscriptionId = user?.publicMetadata?.subscription?.subscriptionId || null;
+  const subscriptionStatus = user?.publicMetadata?.subscription?.status || null;
+  const cancelAt = user?.publicMetadata?.subscription?.cancelAt || null;
 
   const handleCheckout = async (plan) => {
     if (!user) {
@@ -492,6 +495,48 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
     }
   };
 
+  const handleCancel = async () => {
+    if (!user || !subscriptionId) {
+      alert('Nelze zrušit předplatné');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      'Opravdu chcete zrušit předplatné? Přístup k aplikaci budete mít do konce aktuálního zaplaceného období.'
+    );
+
+    if (!confirmed) return;
+
+    setLoading('cancel');
+
+    try {
+      const response = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          subscriptionId: subscriptionId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Předplatné bylo zrušeno. Přístup máte do ' + new Date(data.cancelAt).toLocaleDateString('cs-CZ'));
+        window.location.reload();
+      } else {
+        alert('Chyba při rušení předplatného: ' + (data.error || 'Neznámá chyba'));
+        setLoading(null);
+      }
+    } catch (error) {
+      console.error('Cancel error:', error);
+      alert('Chyba při rušení předplatného');
+      setLoading(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -518,16 +563,33 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
       
       <main className="max-w-4xl mx-auto px-6 py-12">
         {isSubscribed && (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-8 max-w-3xl mx-auto">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                <Check size={20} className="text-green-600" />
+          <div className={`${subscriptionStatus === 'canceling' ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'} border rounded-2xl p-6 mb-8 max-w-3xl mx-auto`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-full ${subscriptionStatus === 'canceling' ? 'bg-yellow-100' : 'bg-green-100'} flex items-center justify-center`}>
+                  <Check size={20} className={subscriptionStatus === 'canceling' ? 'text-yellow-600' : 'text-green-600'} />
+                </div>
+                <div>
+                  <h3 className={`font-bold ${subscriptionStatus === 'canceling' ? 'text-yellow-800' : 'text-green-800'}`}>
+                    {subscriptionStatus === 'canceling' 
+                      ? `Předplatné bude zrušeno ${cancelAt ? new Date(cancelAt).toLocaleDateString('cs-CZ') : ''}`
+                      : `Máte aktivní ${activePlan === 'yearly' ? 'roční' : 'měsíční'} předplatné`
+                    }
+                  </h3>
+                  {subscriptionStatus === 'canceling' && (
+                    <p className="text-sm text-yellow-700 mt-1">Do té doby máte plný přístup k aplikaci.</p>
+                  )}
+                </div>
               </div>
-              <div>
-                <h3 className="font-bold text-green-800">
-                  Máte aktivní {activePlan === 'yearly' ? 'roční' : 'měsíční'} předplatné
-                </h3>
-              </div>
+              {subscriptionStatus === 'active' && (
+                <button
+                  onClick={handleCancel}
+                  disabled={loading === 'cancel'}
+                  className="text-sm text-gray-500 hover:text-red-500 transition-colors disabled:opacity-50"
+                >
+                  {loading === 'cancel' ? 'Ruším...' : 'Zrušit předplatné'}
+                </button>
+              )}
             </div>
           </div>
         )}
