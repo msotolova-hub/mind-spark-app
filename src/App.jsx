@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser, useAuth } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser, useAuth, ClerkLoaded, ClerkLoading } from '@clerk/clerk-react';
 import { 
   Target, Thermometer, Users, Home, Triangle, Sparkles, LogOut, BookOpen, 
   ChevronRight, X, Info, ArrowLeft, Star, Check, CreditCard
@@ -352,11 +352,6 @@ const TechniqueCard = ({ technique, onClick, onInfoClick }) => {
 // ============================================
 // STRIPE ODKAZY
 // ============================================
-const STRIPE_LINKS = {
-  monthly: 'https://buy.stripe.com/test_cNi4gz0aQ6A784VgF17ok00',
-  yearly: 'https://buy.stripe.com/test_dRmbJ12iY1fN2KBewT7ok01'
-};
-
 // ============================================
 // DASHBOARD
 // ============================================
@@ -456,6 +451,44 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
 // ============================================
 
 const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy, isSubscribed }) => {
+  const { user } = useUser();
+  const [loading, setLoading] = useState(null); // 'monthly' nebo 'yearly' nebo null
+
+  const handleCheckout = async (plan) => {
+    if (!user) {
+      alert('Musíte být přihlášeni');
+      return;
+    }
+
+    setLoading(plan);
+
+    try {
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          plan: plan, // 'monthly' nebo 'yearly'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Chyba při vytváření platby: ' + (data.error || 'Neznámá chyba'));
+        setLoading(null);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Chyba při vytváření platby');
+      setLoading(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF6F2]">
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-40">
@@ -541,14 +574,13 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
                 Aktuální plán
               </div>
             ) : (
-              <a 
-                href={STRIPE_LINKS.monthly}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors text-center"
+              <button 
+                onClick={() => handleCheckout('monthly')}
+                disabled={loading !== null}
+                className="block w-full bg-white border-2 border-[#ff8474] text-[#ff8474] font-bold py-3 px-6 rounded-xl hover:bg-[#fff5f3] transition-colors text-center disabled:opacity-50"
               >
-                Vybrat měsíční
-              </a>
+                {loading === 'monthly' ? 'Načítání...' : 'Vybrat měsíční'}
+              </button>
             )}
           </div>
 
@@ -591,14 +623,13 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
                 Upgrade
               </div>
             ) : (
-              <a 
-                href={STRIPE_LINKS.yearly}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center"
+              <button 
+                onClick={() => handleCheckout('yearly')}
+                disabled={loading !== null}
+                className="block w-full bg-[#ff8474] text-white font-bold py-3 px-6 rounded-xl hover:bg-[#e06b5c] transition-colors text-center disabled:opacity-50"
               >
-                Vybrat roční
-              </a>
+                {loading === 'yearly' ? 'Načítání...' : 'Vybrat roční'}
+              </button>
             )}
           </div>
         </div>
@@ -932,6 +963,19 @@ const App = () => {
     <>
       <GlobalStyles />
       
+      {/* Loading state pro Clerk */}
+      <ClerkLoading>
+        <div className="min-h-screen bg-[#FAF6F2] flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-xl bg-[#ff8474] flex items-center justify-center mx-auto mb-4 animate-pulse">
+              <Sparkles size={24} className="text-white" />
+            </div>
+            <p className="text-[#a69d90]">Načítání...</p>
+          </div>
+        </div>
+      </ClerkLoading>
+      
+      <ClerkLoaded>
       {/* Přihlašovací obrazovka pro nepřihlášené */}
       <SignedOut>
         {!legalPage ? (
@@ -1006,6 +1050,7 @@ const App = () => {
           </ProtectedContent>
         )}
       </SignedIn>
+      </ClerkLoaded>
     </>
   );
 };
