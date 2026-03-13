@@ -6,7 +6,7 @@ export default function DisneyModel({ onBack }) {
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [answers, setAnswers] = useState({
-    jmeno_koučovaného: '',
+    jmeno_koucovaneho: '',
     datum_sezeni: new Date().toLocaleDateString('cs-CZ'),
     tema: '',
     tema_cil: '',
@@ -49,56 +49,56 @@ export default function DisneyModel({ onBack }) {
   const steps = [
     {
       id: 'intro',
-      title: 'Úvod',
+      title: 'Uvod',
       icon: <Home className="w-5 h-5" />,
       color: 'bg-[#ff8474]',
       questions: [
-        { id: 'jmeno_koučovaného', label: 'JMÉNO KOUČOVANÉHO', placeholder: 'Jméno', type: 'text', icon: <User size={16}/> },
+        { id: 'jmeno_koucovaneho', label: 'JMENO KOUCOVANEHO', placeholder: 'Jmeno', type: 'text', icon: <User size={16}/> },
         { id: 'datum_sezeni', label: 'DATUM', placeholder: 'DD.MM.RRRR', type: 'text', icon: <Calendar size={16}/> },
-        { id: 'tema', label: 'TÉMA', placeholder: 'Projekt, cíl nebo sen k realizaci', type: 'text' },
-        { id: 'tema_cil', label: 'CÍL SEZENÍ', placeholder: 'Co by pro Vás bylo nejskutečnější si odnést?', type: 'textarea' },
-        { id: 'vize_zacatek', label: 'VIZE NA ZAČÁTKU', placeholder: 'Jaká je Vaše vstupní představa? Až to bude hotové, budu...', type: 'textarea' },
-        { id: 'barva_kotvy', label: 'DEFINICE KOTEV', placeholder: 'Např. Snílek - žlutá, Realista - zelená, Kritik - černá...', type: 'text' }
+        { id: 'tema', label: 'TEMA', placeholder: 'Projekt, cil nebo sen k realizaci', type: 'text' },
+        { id: 'tema_cil', label: 'CIL SEZENI', placeholder: 'Co by pro Vas bylo nejskutecnejsi si odnest?', type: 'textarea' },
+        { id: 'vize_zacatek', label: 'VIZE NA ZACATKU', placeholder: 'Jaka je Vase vstupni predstava? Az to bude hotove, budu...', type: 'textarea' },
+        { id: 'barva_kotvy', label: 'DEFINICE KOTEV', placeholder: 'Napr. Snilek - zluta, Realista - zelena, Kritik - cerna...', type: 'text' }
       ],
       guide: {
-        tips: ["Udržujte nastavení mysli oddělené (diferenciace).", "Koučovaný si volí barvy nebo místa pro každou fázi.", "Zapište si zvolené kotvy pro konzistenci."],
-        phrases: ["Vyberte si prosím tři barvy nebo místa pro role Snílka, Realisty a Kritika.", "Cílem je oddělit tři různé konverzace pro posílení plánování."]
+        tips: ["Udrzujte nastaveni mysli oddelene (diferenciace).", "Koucovany si voli barvy nebo mista pro kazdou fazi.", "Zapiste si zvolene kotvy pro konzistenci."],
+        phrases: ["Vyberte si prosim tri barvy nebo mista pro role Snilka, Realisty a Kritika.", "Cilem je oddelit tri ruzne konverzace pro posileni planovani."]
       }
     },
     {
       id: 'snilek',
-      title: 'Snílek',
+      title: 'Snilek',
       icon: <Lightbulb className="w-5 h-5" />,
       color: 'bg-[#FBBF24]',
       questions: [
-        { id: 'vize_cas', label: 'POHLED DO BUDOUCNOSTI (5 LET)', placeholder: 'Co vidíte v pět let vzdálené budoucnosti?', type: 'text' },
-        { id: 'vize_popis', label: 'PANORAMA MOŽNOSTÍ', placeholder: 'Pohlédněte na svítání velkého snu... Co konkrétně vidíte?', type: 'textarea' },
-        { id: 'vize_film', label: 'VNITŘNÍ „ČTYŘHVĚZDIČKOVÝ" FILM', placeholder: 'Sledujte sám/sama sebe v akci. Co vidíte v živých barvách?', type: 'textarea' },
-        { id: 'vize_pocity', label: 'HODNOTY A POCITY', placeholder: 'Jakou největší hodnotu tento sen přináší?', type: 'text' },
-        { id: 'vize_telo', label: 'TĚLESNÁ KOTVA', placeholder: 'Kde v těle vnímáte tento „rozvíjející se sen"?', type: 'text' }
+        { id: 'vize_cas', label: 'POHLED DO BUDOUCNOSTI (5 LET)', placeholder: 'Co vidite v pet let vzdalene budoucnosti?', type: 'text' },
+        { id: 'vize_popis', label: 'PANORAMA MOZNOSTI', placeholder: 'Pohlednete na svitani velkeho snu... Co konkretne vidite?', type: 'textarea' },
+        { id: 'vize_film', label: 'VNITRNI CTYRHVEZDICKOVY FILM', placeholder: 'Sledujte sam/sama sebe v akci. Co vidite v zivych barvach?', type: 'textarea' },
+        { id: 'vize_pocity', label: 'HODNOTY A POCITY', placeholder: 'Jakou nejvetsi hodnotu tento sen prinasi?', type: 'text' },
+        { id: 'vize_telo', label: 'TELESNA KOTVA', placeholder: 'Kde v tele vnimate tento rozvijejici se sen?', type: 'text' }
       ],
       guide: {
-        state: "DISOCIOVANÝ (vizionář)",
-        body: "Vzpřímený, uvolněný, hlava a ramena zdvižena. Oči vzhůru.",
-        voice: "Lehký, výše položený tón.",
-        phrases: ["Podívejte se do dálky na svou vizi...", "Pohlédněte na svítání velkého snu.", "Co byste viděli, kdybyste o tom natočili film?", "Dívejte se na sebe, jak hrajete v příběhu nejvyšší hodnoty."]
+        state: "DISOCIOVANY (vizionar)",
+        body: "Vzprimeny, uvolneny, hlava a ramena zdviznuta. Oci vzhuru.",
+        voice: "Lehky, vyse polozeny ton.",
+        phrases: ["Podivejte se do dalky na svou vizi...", "Pohlednete na svitani velkeho snu.", "Co byste videli, kdybyste o tom natocili film?", "Divejte se na sebe, jak hrajete v pribehu nejvyssi hodnoty."]
       }
     },
     {
       id: 'realizator',
-      title: 'Realizátor',
+      title: 'Realizator',
       icon: <Wrench className="w-5 h-5" />,
       color: 'bg-[#10B981]',
       questions: [
-        { id: 'real_energie', label: 'ROVNOVÁHA ENERGIE A HODNOTY', placeholder: 'Stojí vynaložená energie za to? Jsou zdroje v rovnováze?', type: 'text' },
-        { id: 'real_jak', label: 'FYZICKÉ PROCHÁZENÍ KROKŮ', placeholder: 'Jako byste kroky fyzicky cítil(a)... Jak jste to udělal(a)?', type: 'textarea' },
-        { id: 'real_milniky', label: 'OKAMŽITÉ NAPLŇOVÁNÍ', placeholder: 'Jaké jsou milníky v čase?', type: 'textarea' }
+        { id: 'real_energie', label: 'ROVNOVAHA ENERGIE A HODNOTY', placeholder: 'Stoji vynalozena energie za to? Jsou zdroje v rovnovaze?', type: 'text' },
+        { id: 'real_jak', label: 'FYZICKE PROCHAZENI KROKU', placeholder: 'Jako byste kroky fyzicky citil(a)... Jak jste to udelal(a)?', type: 'textarea' },
+        { id: 'real_milniky', label: 'OKAMZITE NAPLNOVANI', placeholder: 'Jake jsou milniky v case?', type: 'textarea' }
       ],
       guide: {
-        state: "ASOCIOVANÝ (v akci)",
-        body: "Zaměření kupředu, aktivní postoj „pojďme na to".",
-        voice: "Věcný, procedurální tón.",
-        phrases: ["Nasaďte si (zvolenou) kotvu a zamyslete se nad kroky.", "Představte si činnosti, jako byste je právě vykonával.", "Stojí to za to? Jsou energie a hodnota v rovnováze?"]
+        state: "ASOCIOVANY (v akci)",
+        body: "Zamereni kupredu, aktivni postoj - pojdme na to.",
+        voice: "Vecny, proceduralni ton.",
+        phrases: ["Nasadte si (zvolenou) kotvu a zamyslete se nad kroky.", "Predstavte si cinnosti, jako byste je prave vykonaval.", "Stoji to za to? Jsou energie a hodnota v rovnovaze?"]
       }
     },
     {
@@ -107,21 +107,21 @@ export default function DisneyModel({ onBack }) {
       icon: <Search className="w-5 h-5" />,
       color: 'bg-[#EF4444]',
       questions: [
-        { id: 'kritik_predpoklad', label: '„PŘEDPOKLÁDEJME, ŽE..."', placeholder: 'Jaké otázky by si kladl kritik?', type: 'textarea' },
-        { id: 'kritik_uhel_pohledu', label: 'POZICE JINÉHO ÚHLU POHLEDU', placeholder: 'Co by řekl bankéř nebo konkurence?', type: 'textarea' },
-        { id: 'kritik_napady', label: 'CITLIVOST VŮČI OSTATNÍM', placeholder: 'Jak spojit zájmy ostatních se svými?', type: 'textarea' },
-        { id: 'zaver_plan', label: 'PRVNÍ KONKRÉTNÍ KROK', placeholder: 'Co konkrétně a hmatatelně uděláte jako první krok po tomto sezení?', type: 'textarea' }
+        { id: 'kritik_predpoklad', label: 'PREDPOKLADEJME, ZE...', placeholder: 'Jake otazky by si kladl kritik?', type: 'textarea' },
+        { id: 'kritik_uhel_pohledu', label: 'POZICE JINEHO UHLU POHLEDU', placeholder: 'Co by rekl banker nebo konkurence?', type: 'textarea' },
+        { id: 'kritik_napady', label: 'CITLIVOST VUCI OSTATNIM', placeholder: 'Jak spojit zajmy ostatnich se svymi?', type: 'textarea' },
+        { id: 'zaver_plan', label: 'PRVNI KONKRETNI KROK', placeholder: 'Co konkretne a hmatatelne udelate jako prvni krok po tomto sezeni?', type: 'textarea' }
       ],
       guide: {
-        state: "VŠECHNY SYSTÉMY (otázky)",
-        body: "Asymetricky vychýlené, ruka u brady. Oči těkají dolů.",
-        voice: "Pomalý, měkký, tázavý tón.",
-        phrases: ["Vžijte se do pozice bankovního úředníka, který schvaluje úvěr.", "Kdyby měl konkurent výhodu, jak byste produkt vylepšil?", "Jaký je ten nejmenší možný první krok, který můžete udělat hned?"]
+        state: "VSECHNY SYSTEMY (otazky)",
+        body: "Asymetricky vychylene, ruka u brady. Oci tekaji dolu.",
+        voice: "Pomaly, mekky, tazavy ton.",
+        phrases: ["Vzijte se do pozice bankovniho urednika, ktery schvaluje uver.", "Kdyby mel konkurent vyhodu, jak byste produkt vylepsil?", "Jaky je ten nejmensi mozny prvni krok, ktery muzete udelat hned?"]
       }
     },
     {
       id: 'summary',
-      title: 'Shrnutí',
+      title: 'Shrnuti',
       icon: <CheckCircle className="w-5 h-5" />,
       color: 'bg-[#ff8474]',
       questions: []
@@ -141,7 +141,7 @@ export default function DisneyModel({ onBack }) {
               <button
                 onClick={onBack}
                 className="p-2 text-[#a69d90] hover:text-[#ff8474] hover:bg-[#FAF6F2] rounded-lg transition-colors"
-                title="Zpět na dashboard"
+                title="Zpet na dashboard"
               >
                 <Home size={20} />
               </button>
@@ -150,7 +150,7 @@ export default function DisneyModel({ onBack }) {
               <h1 className="text-2xl font-bold tracking-tight text-[#2D2D2D] flex items-center gap-2">
                 Disney Model
               </h1>
-              <p className="text-[#A5A5A5] text-sm font-medium">profesionální nástroj pro kouče <span className="text-[#ff8474] font-bold ml-1">by Mind Spark</span></p>
+              <p className="text-[#A5A5A5] text-sm font-medium">profesionalni nastroj pro kouce <span className="text-[#ff8474] font-bold ml-1">by Mind Spark</span></p>
             </div>
           </div>
           
@@ -159,7 +159,7 @@ export default function DisneyModel({ onBack }) {
               <span className="text-[#a69d90]"><RotateCcw size={16} onClick={() => {setTimer(0); setIsTimerRunning(false)}} className="cursor-pointer hover:text-[#ff8474]"/></span>
               {formatTime(timer)}
               <button onClick={() => setIsTimerRunning(!isTimerRunning)} className="p-1.5 bg-[#ff8474] text-white rounded-xl hover:bg-[#e06b5c] transition-all">
-                {isTimerRunning ?<Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                {isTimerRunning ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
               </button>
             </div>
           </div>
@@ -208,7 +208,7 @@ export default function DisneyModel({ onBack }) {
                 <div className="mb-8 bg-[#2D2D2D] text-white p-4 rounded-2xl flex items-center justify-between no-print shadow-xl">
                   <div className="flex items-center gap-3">
                     <Anchor size={18} className="text-[#ff8474]" />
-                    <span className="text-[10px] font-black tracking-widest text-[#888]">AKTIVNÍ KOTVA</span>
+                    <span className="text-[10px] font-black tracking-widest text-[#888]">AKTIVNI KOTVA</span>
                   </div>
                   <span className="text-sm font-bold text-[#ff8474] uppercase">{answers.barva_kotvy}</span>
                 </div>
@@ -219,7 +219,7 @@ export default function DisneyModel({ onBack }) {
                 <div className="mb-8 bg-[#FAF6F2] p-6 rounded-2xl border border-[#e5ddd2] no-print">
                    <h3 className="text-[10px] font-black uppercase tracking-widest text-[#ff8474] mb-2">O TECHNICE</h3>
                    <p className="text-xs leading-relaxed text-[#7A7A7A]">
-                     Důsledným oddělením fází Snílka, Realisty a Kritika usnadníte tři odlišné konverzace. Tím, jak se koučovaný posunuje od jedné fáze k druhé, dochází k posilování jeho plánovacích schopností.
+                     Duslednym oddelenim fazi Snilka, Realisty a Kritika usnadnite tri odlisne konverzace. Tim, jak se koucovany posunuje od jedne faze k druhe, dochazi k posilovani jeho panovacich schopnosti.
                    </p>
                 </div>
               )}
@@ -254,12 +254,12 @@ export default function DisneyModel({ onBack }) {
                     ))}
                   </div>
                 ) : (
-                  /* SHRNUTÍ - PRINT CONTENT */
+                  /* SHRNUTI - PRINT CONTENT */
                   <div className="flex flex-col items-center print-content">
                     <div className="w-full flex justify-between items-end mb-10 border-b-2 border-[#FAF6F2] pb-6">
                        <div className="text-left">
-                          <h2 className="text-3xl font-black text-[#2D2D2D] tracking-tight mb-1">Koučovací sezení</h2>
-                          <p className="text-[#ff8474] font-bold uppercase text-[10px] tracking-widest">{answers.jmeno_koučovaného || "KOUČOVANÝ"}</p>
+                          <h2 className="text-3xl font-black text-[#2D2D2D] tracking-tight mb-1">Koucovaci sezeni</h2>
+                          <p className="text-[#ff8474] font-bold uppercase text-[10px] tracking-widest">{answers.jmeno_koucovaneho || "KOUCOVANY"}</p>
                        </div>
                        <div className="text-right">
                           <p className="text-[#A5A5A5] text-[10px] font-black uppercase tracking-widest">{getFormattedDate()}</p>
@@ -272,9 +272,9 @@ export default function DisneyModel({ onBack }) {
                             <path d="M250 10 L490 210 L10 210 Z" fill="white" stroke="#FAF6F2" strokeWidth="1" />
                             <foreignObject x="100" y="80" width="300" height="120">
                               <div className="flex flex-col items-center justify-center h-full text-center px-4 overflow-hidden">
-                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[#FBBF24] mb-2">SNÍLEK</h4>
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-[#FBBF24] mb-2">SNILEK</h4>
                                 <p className="text-[11px] text-[#4A4A4A] line-clamp-4 leading-relaxed italic">
-                                  {answers.vize_film || answers.vize_popis || "Vize nebyla definována."}
+                                  {answers.vize_film || answers.vize_popis || "Vize nebyla definovana."}
                                 </p>
                               </div>
                             </foreignObject>
@@ -283,7 +283,7 @@ export default function DisneyModel({ onBack }) {
 
                       <div className="w-full flex flex-col gap-4">
                         <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full print-box">
-                           <h4 className="text-[10px] font-black uppercase tracking-widest text-[#10B981] mb-3">REALIZÁTOR</h4>
+                           <h4 className="text-[10px] font-black uppercase tracking-widest text-[#10B981] mb-3">REALIZATOR</h4>
                            <p className="text-xs text-[#4A4A4A] leading-relaxed">{answers.real_jak || "-"}</p>
                         </div>
                         <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full print-box">
@@ -294,12 +294,12 @@ export default function DisneyModel({ onBack }) {
 
                       <div className="w-full bg-[#2D2D2D] p-8 rounded-[3rem] text-white shadow-2xl flex flex-col md:flex-row gap-6 items-center print-dark-box">
                          <div className="flex-1 text-center md:text-left">
-                            <p className="text-[10px] font-black text-[#ff8474] uppercase tracking-[0.2em] mb-2">PRVNÍ KROK</p>
+                            <p className="text-[10px] font-black text-[#ff8474] uppercase tracking-[0.2em] mb-2">PRVNI KROK</p>
                             <p className="text-lg font-bold leading-tight">{answers.zaver_plan || "Nebyl stanoven."}</p>
                          </div>
                          <div className="h-12 w-[1px] bg-white/10 hidden md:block"></div>
                          <div className="text-center md:text-right">
-                            <p className="text-[10px] font-black text-[#A5A5A5] uppercase tracking-widest mb-1">TÉMA</p>
+                            <p className="text-[10px] font-black text-[#A5A5A5] uppercase tracking-widest mb-1">TEMA</p>
                             <p className="text-sm font-medium opacity-80">{answers.tema || "-"}</p>
                          </div>
                       </div>
@@ -315,15 +315,15 @@ export default function DisneyModel({ onBack }) {
               {/* Navigation */}
               <div className="mt-12 pt-8 border-t border-[#FAF6F2] flex justify-between no-print">
                 <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0} className={`flex items-center gap-2 px-6 py-2 rounded-2xl font-bold transition-all ${step === 0 ? 'text-[#e5ddd2] cursor-not-allowed' : 'text-[#A5A5A5] hover:bg-[#FAF6F2]'}`}>
-                  <ChevronLeft size={20} /> Zpět
+                  <ChevronLeft size={20} /> Zpet
                 </button>
                 {step < 4 ? (
                   <button onClick={() => setStep(step + 1)} className="flex items-center gap-3 px-10 py-4 bg-[#ff8474] text-white rounded-3xl font-bold hover:bg-[#e06b5c] shadow-xl shadow-[#ff8474]/20 active:scale-95 transition-all group">
-                    Pokračovat <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform"/>
+                    Pokracovat <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform"/>
                   </button>
                 ) : (
                   <button onClick={() => { setStep(0); setTimer(0); setIsTimerRunning(false); }} className="px-10 py-4 bg-[#FAF6F2] text-[#4A4A4A] rounded-3xl font-bold hover:bg-[#e5ddd2] transition-all">
-                    Nové sezení
+                    Nove sezeni
                   </button>
                 )}
               </div>
@@ -335,40 +335,40 @@ export default function DisneyModel({ onBack }) {
             <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-white/60 flex flex-col h-full sticky top-8">
               <div className="flex items-center gap-2 mb-6">
                 <Info size={18} className="text-[#ff8474]" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A5A5A5]">Průvodce Kouče</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A5A5A5]">Pruvodce Kouce</h3>
               </div>
               <div className="space-y-6 overflow-y-auto pr-2">
                 {currentStepData.guide && (
                   <>
                     <div className="bg-[#FAF6F2] p-5 rounded-[2rem]">
-                       <p className="text-[9px] font-black text-[#A5A5A5] uppercase mb-2">MENTÁLNÍ NASTAVENÍ</p>
-                       <p className="text-xs font-bold text-[#2D2D2D] uppercase leading-tight tracking-wide">{currentStepData.guide.state || "PŘÍPRAVA"}</p>
+                       <p className="text-[9px] font-black text-[#A5A5A5] uppercase mb-2">MENTALNI NASTAVENI</p>
+                       <p className="text-xs font-bold text-[#2D2D2D] uppercase leading-tight tracking-wide">{currentStepData.guide.state || "PRIPRAVA"}</p>
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-1 shrink-0 ${step === 0 ? 'bg-[#ff8474]' : step === 1 ? 'bg-[#FBBF24]' : step === 2 ? 'bg-[#10B981]' : 'bg-[#EF4444]'}`}></div>
                         <div>
                           <p className="text-[9px] font-black text-[#D1D1D1] uppercase mb-0.5">POSTOJ</p>
-                          <p className="text-xs text-[#7A7A7A] leading-snug">{currentStepData.guide.body || "Standardní"}</p>
+                          <p className="text-xs text-[#7A7A7A] leading-snug">{currentStepData.guide.body || "Standardni"}</p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="w-2 h-2 rounded-full bg-[#e5ddd2] mt-1 shrink-0"></div>
                         <div>
                           <p className="text-[9px] font-black text-[#D1D1D1] uppercase mb-0.5">HLAS</p>
-                          <p className="text-xs text-[#7A7A7A] leading-snug">{currentStepData.guide.voice || "Přirozený"}</p>
+                          <p className="text-xs text-[#7A7A7A] leading-snug">{currentStepData.guide.voice || "Prirozeny"}</p>
                         </div>
                       </div>
                     </div>
                     <div className="pt-6 border-t border-[#FAF6F2]">
                       <div className="flex items-center gap-2 mb-4">
                         <MessageSquare size={14} className="text-[#ff8474]" />
-                        <span className="text-[9px] font-black uppercase text-[#A5A5A5] tracking-[0.2em]">FRÁZE</span>
+                        <span className="text-[9px] font-black uppercase text-[#A5A5A5] tracking-[0.2em]">FRAZE</span>
                       </div>
                       <div className="space-y-4">
                         {currentStepData.guide.phrases?.map((phrase, i) => (
                           <div key={i} className="bg-[#FAF6F2] p-4 rounded-2xl border-l-4 border-[#ff8474]">
-                            <p className="text-xs text-[#4A4A4A] leading-relaxed italic">„{phrase}"</p>
+                            <p className="text-xs text-[#4A4A4A] leading-relaxed italic">{phrase}</p>
                           </div>
                         ))}
                       </div>
@@ -380,7 +380,7 @@ export default function DisneyModel({ onBack }) {
                 <div className="bg-[#FAF6F2] p-4 rounded-2xl border border-white/40">
                   <p className="text-[9px] font-black text-[#ff8474] uppercase tracking-widest mb-1 underline underline-offset-4">Mind Spark Concept</p>
                   <p className="text-[10px] text-[#A5A5A5] leading-tight italic">
-                    Efektivní koučování vyžaduje striktní oddělení těchto tří vnitřních světů.
+                    Efektivni koucovani vyzaduje striktni oddeleni techto tri vnitrnich svetu.
                   </p>
                 </div>
               </div>
@@ -390,7 +390,7 @@ export default function DisneyModel({ onBack }) {
       </div>
 
       <footer className="mt-16 text-center text-[#D1D1D1] text-[10px] uppercase tracking-[0.3em] pb-12 no-print">
-        <p>Mind Spark © 2026 • Disney Model • Profesionální Edice</p>
+        <p>Mind Spark 2026 - Disney Model - Profesionalni Edice</p>
       </footer>
       
       <style>{`
@@ -436,10 +436,10 @@ export default function DisneyModel({ onBack }) {
             print-color-adjust: exact !important;
           }
           
-          .text-\[\#FBBF24\] { color: #FBBF24 !important; }
-          .text-\[\#10B981\] { color: #10B981 !important; }
-          .text-\[\#EF4444\] { color: #EF4444 !important; }
-          .text-\[\#ff8474\] { color: #ff8474 !important; }
+          .text-\\[\\#FBBF24\\] { color: #FBBF24 !important; }
+          .text-\\[\\#10B981\\] { color: #10B981 !important; }
+          .text-\\[\\#EF4444\\] { color: #EF4444 !important; }
+          .text-\\[\\#ff8474\\] { color: #ff8474 !important; }
           
           * {
             overflow: visible !important;
