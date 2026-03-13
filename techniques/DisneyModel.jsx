@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Play, Pause, RotateCcw, CheckCircle, Lightbulb, Wrench, Search, Printer, MessageSquare, Info, Anchor, User, Calendar, Home } from 'lucide-react';
 
-export default function DisneyModel() {
+export default function DisneyModel({ onBack }) {
   const [step, setStep] = useState(0);
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -136,12 +136,22 @@ export default function DisneyModel() {
         
         {/* Header */}
         <header className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 bg-white/50 backdrop-blur-sm p-6 rounded-3xl border border-white/40 shadow-sm no-print">
-          <div className="text-center md:text-left">
-            <h1 className="text-2xl font-bold tracking-tight text-[#2D2D2D] flex items-center gap-2">
-              <Home className="w-6 h-6 text-[#ff8474]" />
-              Disney Model
-            </h1>
-            <p className="text-[#A5A5A5] text-sm font-medium">profesionální nástroj pro kouče <span className="text-[#ff8474] font-bold ml-1">by Mind Spark</span></p>
+          <div className="flex items-center gap-4">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 text-[#a69d90] hover:text-[#ff8474] hover:bg-[#FAF6F2] rounded-lg transition-colors"
+                title="Zpět na dashboard"
+              >
+                <Home size={20} />
+              </button>
+            )}
+            <div className="text-center md:text-left">
+              <h1 className="text-2xl font-bold tracking-tight text-[#2D2D2D] flex items-center gap-2">
+                Disney Model
+              </h1>
+              <p className="text-[#A5A5A5] text-sm font-medium">profesionální nástroj pro kouče <span className="text-[#ff8474] font-bold ml-1">by Mind Spark</span></p>
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
@@ -149,7 +159,7 @@ export default function DisneyModel() {
               <span className="text-[#a69d90]"><RotateCcw size={16} onClick={() => {setTimer(0); setIsTimerRunning(false)}} className="cursor-pointer hover:text-[#ff8474]"/></span>
               {formatTime(timer)}
               <button onClick={() => setIsTimerRunning(!isTimerRunning)} className="p-1.5 bg-[#ff8474] text-white rounded-xl hover:bg-[#e06b5c] transition-all">
-                {isTimerRunning ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
+                {isTimerRunning ?<Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
               </button>
             </div>
           </div>
@@ -191,7 +201,7 @@ export default function DisneyModel() {
 
           {/* Main Interaction Area */}
           <div className={`${step === 4 ? 'lg:col-span-12' : 'lg:col-span-7'} space-y-6`}>
-            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-white/60 min-h-[650px] flex flex-col relative overflow-hidden">
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-white/60 min-h-[650px] flex flex-col relative overflow-hidden print-main">
               
               {/* Anchor Reminder */}
               {step > 0 && step < 4 && answers.barva_kotvy && (
@@ -244,7 +254,8 @@ export default function DisneyModel() {
                     ))}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center">
+                  /* SHRNUTÍ - PRINT CONTENT */
+                  <div className="flex flex-col items-center print-content">
                     <div className="w-full flex justify-between items-end mb-10 border-b-2 border-[#FAF6F2] pb-6">
                        <div className="text-left">
                           <h2 className="text-3xl font-black text-[#2D2D2D] tracking-tight mb-1">Koučovací sezení</h2>
@@ -257,7 +268,7 @@ export default function DisneyModel() {
                     
                     <div className="w-full max-w-3xl flex flex-col items-center gap-6">
                       <div className="relative w-full mb-4">
-                         <svg viewBox="0 0 500 220" className="w-full drop-shadow-xl">
+                         <svg viewBox="0 0 500 220" className="w-full drop-shadow-xl print-svg">
                             <path d="M250 10 L490 210 L10 210 Z" fill="white" stroke="#FAF6F2" strokeWidth="1" />
                             <foreignObject x="100" y="80" width="300" height="120">
                               <div className="flex flex-col items-center justify-center h-full text-center px-4 overflow-hidden">
@@ -271,17 +282,17 @@ export default function DisneyModel() {
                       </div>
 
                       <div className="w-full flex flex-col gap-4">
-                        <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full">
+                        <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full print-box">
                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[#10B981] mb-3">REALIZÁTOR</h4>
                            <p className="text-xs text-[#4A4A4A] leading-relaxed">{answers.real_jak || "-"}</p>
                         </div>
-                        <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full">
+                        <div className="bg-white border-2 border-[#FAF6F2] rounded-3xl p-6 text-center w-full print-box">
                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[#EF4444] mb-3">KRITIK</h4>
                            <p className="text-xs text-[#4A4A4A] leading-relaxed">{answers.kritik_predpoklad || "-"}</p>
                         </div>
                       </div>
 
-                      <div className="w-full bg-[#2D2D2D] p-8 rounded-[3rem] text-white shadow-2xl flex flex-col md:flex-row gap-6 items-center">
+                      <div className="w-full bg-[#2D2D2D] p-8 rounded-[3rem] text-white shadow-2xl flex flex-col md:flex-row gap-6 items-center print-dark-box">
                          <div className="flex-1 text-center md:text-left">
                             <p className="text-[10px] font-black text-[#ff8474] uppercase tracking-[0.2em] mb-2">PRVNÍ KROK</p>
                             <p className="text-lg font-bold leading-tight">{answers.zaver_plan || "Nebyl stanoven."}</p>
@@ -326,7 +337,6 @@ export default function DisneyModel() {
                 <Info size={18} className="text-[#ff8474]" />
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#A5A5A5]">Průvodce Kouče</h3>
               </div>
-
               <div className="space-y-6 overflow-y-auto pr-2">
                 {currentStepData.guide && (
                   <>
@@ -334,7 +344,6 @@ export default function DisneyModel() {
                        <p className="text-[9px] font-black text-[#A5A5A5] uppercase mb-2">MENTÁLNÍ NASTAVENÍ</p>
                        <p className="text-xs font-bold text-[#2D2D2D] uppercase leading-tight tracking-wide">{currentStepData.guide.state || "PŘÍPRAVA"}</p>
                     </div>
-
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-1 shrink-0 ${step === 0 ? 'bg-[#ff8474]' : step === 1 ? 'bg-[#FBBF24]' : step === 2 ? 'bg-[#10B981]' : 'bg-[#EF4444]'}`}></div>
@@ -351,7 +360,6 @@ export default function DisneyModel() {
                         </div>
                       </div>
                     </div>
-
                     <div className="pt-6 border-t border-[#FAF6F2]">
                       <div className="flex items-center gap-2 mb-4">
                         <MessageSquare size={14} className="text-[#ff8474]" />
@@ -368,7 +376,6 @@ export default function DisneyModel() {
                   </>
                 )}
               </div>
-
               <div className="mt-auto pt-8">
                 <div className="bg-[#FAF6F2] p-4 rounded-2xl border border-white/40">
                   <p className="text-[9px] font-black text-[#ff8474] uppercase tracking-widest mb-1 underline underline-offset-4">Mind Spark Concept</p>
@@ -389,7 +396,56 @@ export default function DisneyModel() {
       <style>{`
         @media print {
           .no-print { display: none !important; }
+          
+          body, html {
+            background: white !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
+          .min-h-screen {
+            min-height: auto !important;
+          }
+          
+          .print-main {
+            padding: 20px !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+          
+          .print-content {
+            width: 100% !important;
+          }
+          
+          .print-svg {
+            max-width: 400px !important;
+            margin: 0 auto !important;
+          }
+          
+          .print-box {
+            background-color: white !important;
+            border: 2px solid #e5ddd2 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
+          .print-dark-box {
+            background-color: #2D2D2D !important;
+            color: white !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          
+          .text-\[\#FBBF24\] { color: #FBBF24 !important; }
+          .text-\[\#10B981\] { color: #10B981 !important; }
+          .text-\[\#EF4444\] { color: #EF4444 !important; }
+          .text-\[\#ff8474\] { color: #ff8474 !important; }
+          
+          * {
+            overflow: visible !important;
+          }
         }
+        
         .line-clamp-4 {
           display: -webkit-box;
           -webkit-line-clamp: 4;

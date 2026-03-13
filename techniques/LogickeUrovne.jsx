@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft, RotateCcw, Printer, Copy, CheckCircle, User, Calendar, Target, Info, Globe, Cog, Heart, Sparkles, ArrowUp, BookOpen, X } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RotateCcw, Printer, Copy, CheckCircle, User, Calendar, Target, Info, Globe, Cog, Heart, Sparkles, ArrowUp, BookOpen, X, Home } from 'lucide-react';
 
 const COLORS = {
   primary: '#ff8474',
@@ -17,7 +17,7 @@ const LEVELS = [
   { id: 'identita', name: 'Identita', subtitle: 'Kdo jsem?', icon: Sparkles, color: '#2C2C2C', description: 'Sebepojetí a role' }
 ];
 
-export default function LogickeUrovne() {
+export default function LogickeUrovne({ onBack }) {
   const [step, setStep] = useState(0);
   const [showTheory, setShowTheory] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -478,7 +478,7 @@ export default function LogickeUrovne() {
           </div>
 
           {/* Actions */}
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 no-print">
             <button
               onClick={handlePrint}
               className="flex items-center gap-2 px-6 py-3 bg-[#ff8474] text-white rounded-xl font-bold hover:bg-[#e06b5c] shadow-lg shadow-[#ff8474]/20 transition-all"
@@ -504,11 +504,22 @@ export default function LogickeUrovne() {
       {/* Header */}
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-20 no-print">
         <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#ff8474] flex items-center justify-center">
-              <Target size={16} className="text-white" />
+          <div className="flex items-center gap-4">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="p-2 text-[#a69d90] hover:text-[#ff8474] hover:bg-[#FAF6F2] rounded-lg transition-colors"
+                title="Zpět na dashboard"
+              >
+                <Home size={20} />
+              </button>
+            )}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[#ff8474] flex items-center justify-center">
+                <Target size={16} className="text-white" />
+              </div>
+              <h1 className="font-bold text-lg text-[#2C2C2C]">Logické úrovně</h1>
             </div>
-            <h1 className="font-bold text-lg text-[#2C2C2C]">Logické úrovně</h1>
           </div>
           <div className="flex items-center gap-2">
             <button
