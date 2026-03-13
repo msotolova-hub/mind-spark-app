@@ -436,8 +436,8 @@ const Dashboard = ({ onSelectTechnique, onShowInfo, onShowTerms, onShowPrivacy, 
             © 2026 Mind Spark · Profesionální nástroje pro kouče
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="#" onClick={(e) => { e.preventDefault(); onShowTerms && onShowTerms(); }} className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Podmínky</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onShowPrivacy && onShowPrivacy(); }} className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+            <a href="https://sotolovamichaela.com/mind-spark-app/obchodni-podminky" target="_blank" rel="noopener noreferrer" className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Podmínky</a>
+            <a href="https://sotolovamichaela.com/mind-spark-app/zasady-ochrany-osobnich-udaju" target="_blank" rel="noopener noreferrer" className="text-[#a69d90] hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
           </div>
         </div>
       </footer>
@@ -735,10 +735,6 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
                 <Check size={18} className="text-green-500 flex-shrink-0" />
                 <span>Pracovní listy a průvodce</span>
               </li>
-              <li className="flex items-center gap-3 text-[#4a4a4a]">
-                <Check size={18} className="text-green-500 flex-shrink-0" />
-                <span>Prioritní podpora</span>
-              </li>
             </ul>
             
             {isSubscribed && activePlan === 'yearly' ? (
@@ -775,13 +771,9 @@ const PricingPage = ({ onBack, showBackButton = true, onShowTerms, onShowPrivacy
         
         {(onShowTerms || onShowPrivacy) && (
           <div className="text-center mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
-            {onShowTerms && (
-              <a href="#" onClick={(e) => { e.preventDefault(); onShowTerms(); }} className="hover:text-[#ff8474] transition-colors">Obchodní podmínky</a>
-            )}
-            {onShowTerms && onShowPrivacy && <span>·</span>}
-            {onShowPrivacy && (
-              <a href="#" onClick={(e) => { e.preventDefault(); onShowPrivacy(); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
-            )}
+            <a href="https://sotolovamichaela.com/mind-spark-app/obchodni-podminky" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff8474] transition-colors">Obchodní podmínky</a>
+            <span>·</span>
+            <a href="https://sotolovamichaela.com/mind-spark-app/zasady-ochrany-osobnich-udaju" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
           </div>
         )}
       </main>
@@ -1139,9 +1131,9 @@ const App = () => {
                 Nemáte účet? Registrace je součástí přihlášení.
               </p>
               <div className="mt-6 flex justify-center gap-4 text-xs text-[#a69d90]">
-                <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('terms'); }} className="hover:text-[#ff8474] transition-colors">Podmínky</a>
+                <a href="https://sotolovamichaela.com/mind-spark-app/obchodni-podminky" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff8474] transition-colors">Podmínky</a>
                 <span>·</span>
-                <a href="#" onClick={(e) => { e.preventDefault(); setLegalPage('privacy'); }} className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
+                <a href="https://sotolovamichaela.com/mind-spark-app/zasady-ochrany-osobnich-udaju" target="_blank" rel="noopener noreferrer" className="hover:text-[#ff8474] transition-colors">Ochrana údajů</a>
               </div>
             </div>
           </div>
