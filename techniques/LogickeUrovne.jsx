@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft, RotateCcw, Printer, Copy, CheckCircle, User, Calendar, Target, Info, Globe, Cog, Heart, Sparkles, ArrowUp, BookOpen, X, Home } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RotateCcw, Printer, Copy, CheckCircle, User, Calendar, Target, Globe, Cog, Heart, Sparkles, ArrowUp, BookOpen, X, Home } from 'lucide-react';
 
 const COLORS = {
   primary: '#ff8474',
@@ -27,7 +27,6 @@ export default function LogickeUrovne({ onBack }) {
     date: new Date().toISOString().split('T')[0],
     topic: '',
     scalingBefore: 5,
-    
     pyramids: [
       {
         id: 1,
@@ -40,7 +39,6 @@ export default function LogickeUrovne({ onBack }) {
       }
     ],
     activePyramidId: 1,
-    
     reflection: '',
     scalingAfter: 5,
     actionSteps: ''
@@ -157,7 +155,7 @@ export default function LogickeUrovne({ onBack }) {
             <h3 className="font-bold text-[#ff8474] uppercase text-xs tracking-wider mb-2">Původ</h3>
             <p className="leading-relaxed">
               Kalifornský psycholog Robert Dilts vytvořil z práce Gregoryho Batesona jednoduchý a elegantní model 
-              pro přemýšlení o osobní změně, učení a komunikaci. Model spojuje myšlenky kontextu, úrovně učení a učební pozice.
+              pro přemýšlení o osobní změně, učení a komunikaci.
             </p>
           </section>
           <section>
@@ -215,7 +213,6 @@ export default function LogickeUrovne({ onBack }) {
               z pěti různých perspektiv a najít nejvhodnější bod pro intervenci.
             </p>
           </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-[#a69d90] uppercase mb-2 flex items-center gap-2">
@@ -241,7 +238,6 @@ export default function LogickeUrovne({ onBack }) {
               />
             </div>
           </div>
-
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-2">Téma / Cíl sezení</label>
             <textarea
@@ -251,7 +247,6 @@ export default function LogickeUrovne({ onBack }) {
               placeholder="Co chcete dnes prozkoumat?"
             />
           </div>
-
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-3">
               Škálování na začátku: Jak blízko jste k cíli? ({data.scalingBefore}/10)
@@ -277,7 +272,6 @@ export default function LogickeUrovne({ onBack }) {
       title: 'Pyramida',
       content: (
         <div className="space-y-6">
-          {/* Pyramid Tabs */}
           <div className="flex items-center gap-2 flex-wrap">
             {data.pyramids.map(p => (
               <button
@@ -307,8 +301,6 @@ export default function LogickeUrovne({ onBack }) {
               + Přidat možnost
             </button>
           </div>
-
-          {/* Pyramid Name */}
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-2">Název možnosti</label>
             <input
@@ -319,8 +311,6 @@ export default function LogickeUrovne({ onBack }) {
               placeholder="Např. Možnost A, Kariéra v IT..."
             />
           </div>
-
-          {/* Levels */}
           <div className="space-y-4">
             {LEVELS.map((level, idx) => {
               const Icon = level.icon;
@@ -359,7 +349,6 @@ export default function LogickeUrovne({ onBack }) {
       title: 'Integrace',
       content: (
         <div className="space-y-6">
-          {/* Visual Comparison */}
           {data.pyramids.length > 1 && (
             <div className="bg-[#FAF6F2] p-6 rounded-2xl">
               <h3 className="text-xs font-bold text-[#a69d90] uppercase mb-4">Porovnání možností</h3>
@@ -373,7 +362,6 @@ export default function LogickeUrovne({ onBack }) {
               </div>
             </div>
           )}
-
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-2">
               Reflexe: Co vidíte, když se díváte na celý obraz?
@@ -385,7 +373,6 @@ export default function LogickeUrovne({ onBack }) {
               placeholder="Jaké vzorce pozorujete? Co vás překvapilo? Která úroveň je klíčová?"
             />
           </div>
-
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-3">
               Škálování na konci: Jak blízko jste nyní k cíli? ({data.scalingAfter}/10)
@@ -409,7 +396,6 @@ export default function LogickeUrovne({ onBack }) {
               </p>
             )}
           </div>
-
           <div>
             <label className="block text-xs font-bold text-[#a69d90] uppercase mb-2">
               Akční kroky: Co konkrétně uděláte?
@@ -428,7 +414,6 @@ export default function LogickeUrovne({ onBack }) {
       title: 'Shrnutí',
       content: (
         <div className="space-y-6">
-          {/* Summary Card */}
           <div className="bg-white border border-[#e5ddd2] rounded-2xl p-6 shadow-sm">
             <div className="flex justify-between items-start mb-6 pb-4 border-b border-[#e5ddd2]">
               <div>
@@ -440,13 +425,10 @@ export default function LogickeUrovne({ onBack }) {
                 <p className="text-lg font-bold text-[#ff8474]">{data.scalingBefore} → {data.scalingAfter}</p>
               </div>
             </div>
-
             <div className="mb-6">
               <h3 className="text-xs font-bold text-[#a69d90] uppercase mb-2">Téma</h3>
               <p className="text-[#2C2C2C]">{data.topic || '-'}</p>
             </div>
-
-            {/* Pyramids Summary */}
             <div className="space-y-6">
               {data.pyramids.map(pyramid => (
                 <div key={pyramid.id} className="bg-[#FAF6F2] p-4 rounded-xl">
@@ -465,19 +447,15 @@ export default function LogickeUrovne({ onBack }) {
                 </div>
               ))}
             </div>
-
             <div className="mt-6 pt-4 border-t border-[#e5ddd2]">
               <h3 className="text-xs font-bold text-[#a69d90] uppercase mb-2">Reflexe</h3>
               <p className="text-[#2C2C2C] italic">{data.reflection || '-'}</p>
             </div>
-
             <div className="mt-4 bg-[#ff8474] text-white p-4 rounded-xl">
               <h3 className="text-xs font-bold uppercase mb-2">Akční kroky</h3>
               <p className="font-medium">{data.actionSteps || '-'}</p>
             </div>
           </div>
-
-          {/* Actions */}
           <div className="flex justify-center gap-3 no-print">
             <button
               onClick={handlePrint}
@@ -500,8 +478,6 @@ export default function LogickeUrovne({ onBack }) {
 
   return (
     <div className="min-h-screen bg-[#FAF6F2] pb-12" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      
-      {/* Header */}
       <header className="bg-white border-b border-[#e5ddd2] sticky top-0 z-20 no-print">
         <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -532,8 +508,6 @@ export default function LogickeUrovne({ onBack }) {
             <span className="text-sm text-[#a69d90]">Krok {step + 1} / {steps.length}</span>
           </div>
         </div>
-        
-        {/* Progress Bar */}
         <div className="h-1 bg-[#e5ddd2]">
           <div 
             className="h-full bg-[#ff8474] transition-all duration-500"
@@ -541,20 +515,12 @@ export default function LogickeUrovne({ onBack }) {
           />
         </div>
       </header>
-
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-[#e5ddd2] p-6 md:p-8">
-          
-          {/* Step Title */}
           <div className="mb-6 pb-4 border-b border-[#e5ddd2]">
             <h2 className="text-2xl font-bold text-[#2C2C2C]">{steps[step].title}</h2>
           </div>
-
-          {/* Step Content */}
           {steps[step].content}
-
-          {/* Navigation */}
           <div className="flex justify-between items-center mt-8 pt-6 border-t border-[#e5ddd2] no-print">
             <button
               onClick={() => setStep(s => Math.max(0, s - 1))}
@@ -565,7 +531,6 @@ export default function LogickeUrovne({ onBack }) {
             >
               <ChevronLeft size={18} /> Zpět
             </button>
-
             {step < steps.length - 1 ? (
               <button
                 onClick={() => setStep(s => s + 1)}
@@ -584,10 +549,7 @@ export default function LogickeUrovne({ onBack }) {
           </div>
         </div>
       </main>
-
-      {/* Theory Modal */}
       {showTheory && <TheoryModal />}
-
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
